@@ -10,4 +10,17 @@ mkdir -p "$config_dir"
 
 cd .. || exit
 
-stow -t "$config_dir" --ignore="export" --override="menu" "$package_name"
+cmd="stow"
+
+args=(
+  "-t"
+  "$config_dir"
+  "--dotfiles"
+  "--ignore"
+  ".export"
+  "$package_name"
+)
+
+eval "${cmd} ${args[*]}"
+
+exit $?
