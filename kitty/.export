@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd "$(dirname "$0")" || exit
+
+package_name="kitty"
+
+config_dir="$HOME/.config/$package_name"
+
+mkdir -p "$config_dir"
+
+cd .. || exit
+
+stow -t "$config_dir" --ignore="export" "$package_name"

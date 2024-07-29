@@ -1,0 +1,3 @@
+# Key-bindings
+bindkey "^P" up-line-or-beginning-search # Up
+bindkey "^N" down-line-or-beginning-search # Down
