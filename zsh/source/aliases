@@ -15,7 +15,7 @@ alias rm='rm -i'
 
 alias lgit="lazygit"
 
-alias oil="nvim ."
+alias oil="nvim +StartOil"
 
 function require_clean_work_tree() {
 	# Update the index
