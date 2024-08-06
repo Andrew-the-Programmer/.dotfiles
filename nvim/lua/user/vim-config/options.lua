@@ -52,3 +52,5 @@ vim.opt.splitbelow = true -- split horizontal window to the bottom
 
 -- turn off swapfile
 -- vim.opt.swapfile = false
+
+vim.opt.shell = "/bin/zsh"

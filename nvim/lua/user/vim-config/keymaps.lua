@@ -1,5 +1,4 @@
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
@@ -48,3 +47,5 @@ vim.keymap.set("n", "<C-]>", "<Nop>")
 -- vim.keymap.set("n", "<C-S-Tab>", "<cmd>tabprevious<CR>")
 
 vim.keymap.set("c", "w!!", ":w !sudo tee %> /dev/null")
+
+vim.keymap.set("n", "-", "<cmd>Oil<CR>")
