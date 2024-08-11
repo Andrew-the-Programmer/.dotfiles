@@ -38,7 +38,7 @@ vim.opt.cursorline = true -- highlight the current cursor line
 -- (have to use iterm2 or any other true color terminal)
 vim.opt.termguicolors = true
 vim.opt.background = "dark" -- colorschemes that can be light or dark will be made dark
-vim.opt.signcolumn = "yes" -- show sign column so that text doesn't shift
+vim.opt.signcolumn = "yes"  -- show sign column so that text doesn't shift
 
 -- backspace
 -- vim.opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
@@ -54,3 +54,11 @@ vim.opt.splitbelow = true -- split horizontal window to the bottom
 -- vim.opt.swapfile = false
 
 vim.opt.shell = "/bin/zsh"
+
+vim.o.exrc = true
+
+vim.opt.spelllang = "en_us"
+
+vim.opt.spell = true
+
+-- vim.opt.spellfile = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")

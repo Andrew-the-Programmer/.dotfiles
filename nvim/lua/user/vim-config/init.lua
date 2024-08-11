@@ -1,5 +1,9 @@
-require 'user.vim-config.functions'
-require 'user.vim-config.options'
-require 'user.vim-config.keymaps'
-require 'user.vim-config.commands'
-require 'user.vim-config.events'
+local vimconfig = "user.vim-config"
+
+require(vimconfig .. ".constants")
+require(vimconfig .. ".functions")
+require(vimconfig .. ".options")
+require(vimconfig .. ".keymaps")
+require(vimconfig .. ".commands")
+require(vimconfig .. ".events")
+require(vimconfig .. ".api")
