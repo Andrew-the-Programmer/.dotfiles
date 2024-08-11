@@ -65,9 +65,11 @@ alias j="jump"
 alias zz="z -"
 
 function ChdirToScriptDir() {
-    cd "$(dirname "$0")" || exit
+	cd "$(dirname "$0")" || exit
 }
 
 function ldir() {
-    find . -mindepth 1 -maxdepth 1 -type d  \( ! -iname ".*" \) | sed 's|^\./||g'
+	find . -mindepth 1 -maxdepth 1 -type d \( ! -iname ".*" \) | sed 's|^\./||g'
 }
+
+alias gh='google-chrome --proxy-server="http://127.0.0.1:8080"'
