@@ -67,11 +67,18 @@ local keymaps = {
         desc = "Sort by type->mtime->name",
     },
 
-    ["<localleader>tt"] = {
+    ["<localleader>To"] = {
         function()
-            vim.cmd("botright 15split term")
+            MyOil.OpenTerm()
         end,
-        desc = "Toggle terminal",
+        desc = "Open terminal-full",
+    },
+
+    ["<localleader>Td"] = {
+        function()
+            MyOil.OpenTerm({ prefix = "15sp" })
+        end,
+        desc = "Open terminal-down",
     },
 
     ["<localleader>id"] = {
@@ -91,16 +98,16 @@ local keymaps = {
 
     -- You can pass additional opts to vim.keymap.set by using
     -- a table with the mapping as the first element.
-    ["<leader>ff"] = {
-        function()
-            require("telescope.builtin").find_files({
-                cwd = oil.get_current_dir(),
-            })
-        end,
-        mode = "n",
-        nowait = true,
-        desc = "Find files in the current directory",
-    },
+    -- ["<leader>ff"] = {
+    --     function()
+    --         require("telescope.builtin").find_files({
+    --             cwd = oil.get_current_dir(),
+    --         })
+    --     end,
+    --     mode = "n",
+    --     nowait = true,
+    --     desc = "Find files in the current directory",
+    -- },
     -- Mappings that are a string starting with "actions." will be
     -- one of the built-in actions, documented below.
     -- ["`"] = "actions.tcd",

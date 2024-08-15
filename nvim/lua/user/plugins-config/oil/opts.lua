@@ -14,4 +14,6 @@ opts = {
     use_default_keymaps = false,
 }
 
+opts["keymaps"] = require("user.plugins-config.oil.keymaps.oil")
+
 return opts
