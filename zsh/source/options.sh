@@ -35,3 +35,5 @@ zle -N down-line-or-beginning-search
 
 export EDITOR='nvim'
 export VISUAL='nvim'
+
+export XDG_CONFIG_HOME="$HOME/.config"
