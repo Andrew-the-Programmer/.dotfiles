@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # history substring
-bindkey "^K" history-substring-search-up
-bindkey "^J" history-substring-search-down
+bindkey "^P" history-substring-search-up
+bindkey "^N" history-substring-search-down

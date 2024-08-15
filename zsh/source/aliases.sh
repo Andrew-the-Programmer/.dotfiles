@@ -1,6 +1,7 @@
 #!/bin/bash
 
 alias ls='ls --color=auto'
+alias ll='ls -lhar'
 alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
 
 # Colorize grep output (good for log files)
@@ -55,7 +56,7 @@ function gsw() {
 
 alias gst='git status'
 
-zsh_config_file="$ZDOTDIR/zshrc"
+zsh_config_file="$ZDOTDIR/.zshrc"
 
 alias zsh-config='nvim $zsh_config_file'
 alias zsh-reload='source $zsh_config_file'
@@ -73,3 +74,9 @@ function ldir() {
 }
 
 alias gh='google-chrome --proxy-server="http://127.0.0.1:8080"'
+
+function touch_with_mkdir() {
+    mkdir -p "$(dirname "$1")" && touch "$1"
+}
+
+alias touch="touch_with_mkdir"
