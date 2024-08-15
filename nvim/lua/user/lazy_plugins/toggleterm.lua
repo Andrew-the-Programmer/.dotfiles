@@ -14,7 +14,7 @@ return {
             vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
         end
 
-        vim.keymap.set({ 't', 'n' }, '<F1>', "<cmd>ToggleTerm<CR>")
+        -- vim.keymap.set({ 't', 'n' }, '<F1>', "<cmd>ToggleTerm<CR>")
         -- if you only want these mappings for toggle term use term://*toggleterm#* instead
         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
     end
