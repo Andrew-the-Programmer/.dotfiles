@@ -28,3 +28,6 @@ function Print(value)
     print(Dump(value))
 end
 
+function Notify(msg)
+    vim.notify(msg, vim.log.levels.INFO)
+end

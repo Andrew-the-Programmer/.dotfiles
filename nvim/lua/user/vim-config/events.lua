@@ -15,3 +15,14 @@ vim.api.nvim_create_autocmd("FileType", {
         pcall(require, file)
     end,
 })
+
+-- vim.api.nvim_create_augroup("MyBufferEvents", { clear = true })
+
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--     group = "MyBufferEvents",
+--     pattern = "*",
+--     callback = function()
+--         Notify("Hello")
+--         print("Buffer modified!")
+--     end,
+-- })

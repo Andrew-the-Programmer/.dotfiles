@@ -48,17 +48,22 @@ vim.keymap.set("n", "<C-]>", "<Nop>")
 
 vim.keymap.set("c", "w!!", ":w !sudo tee %> /dev/null")
 
-vim.keymap.set("n", "-", "<cmd>Oil<CR>")
-
 vim.keymap.set("n", "<leader>tc", "<cmd>%y+<CR>", { desc = "Copy entire buffer to clipboard" })
 
 vim.keymap.set(
     { "n" },
     "<localleader>cd",
-    -- [[pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i]],
-    function ()
-        vim.cmd([[pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i]])
+    function()
+        local dir = My.GetTermCwd()
+        vim.cmd("cd " .. dir)
     end,
     { noremap = true }
 )
 -- tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
+
+vim.keymap.set({ "n", "t" }, "<F1>", function()
+    My.OpenTerm()
+end)
+vim.keymap.set({ "n", "t" }, "<F2>", function()
+    My.CloseTerm()
+end)
