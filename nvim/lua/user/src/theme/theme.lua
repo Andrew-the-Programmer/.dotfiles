@@ -1,1 +1,3 @@
-vim.cmd.colorscheme("catppuccin")
+local themename = "catppuccin-frappe"
+
+vim.cmd.colorscheme(themename)
