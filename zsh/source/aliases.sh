@@ -80,3 +80,9 @@ function touch_with_mkdir() {
 }
 
 alias touch="touch_with_mkdir"
+
+alias fzfd="find . -type d -print | fzf"
+alias zf="cd \$(fzfd)"
+
+alias bat="batcat"
+alias fzfp="fzf --preview \"bat --color=always --style=numbers --line-range=:500 {}\""

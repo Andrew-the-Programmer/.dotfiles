@@ -5,9 +5,13 @@
 )
 
 (defalias
-  escctrl (tap-hold 50 100 esc lctl)
+  escctrl (tap-hold-press 0 100 esc lctl)
 )
 
 (deflayer base
   @escctrl
+)
+
+(defcfg
+  linux-x11-repeat-delay-rate 220,60
 )

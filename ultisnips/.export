@@ -1,6 +1,8 @@
 #!/bin/bash
 
 subpackages=(
+    # "UltiSnips-my"
+    # "UltiSnips-vsnip"
 )
 
 function DefPackageName() {
@@ -24,7 +26,7 @@ function ExportSubpackages() {
 function Export() {
 	package_name="$(DefPackageName)"
 
-    target_dirs=("$HOME/.config/nvim/my_snippets")
+    target_dirs=("$HOME/.config/nvim")
 
     for td in "${target_dirs[@]}"; do
         mkdir -p "$td"
@@ -39,6 +41,8 @@ function Export() {
             "--dotfiles"
             "--ignore"
             ".export"
+            "--ignore"
+            "vim-snippets"
             "$package_name"
         )
 

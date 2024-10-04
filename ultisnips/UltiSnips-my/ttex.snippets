@@ -288,38 +288,6 @@ snippet part "d/dx" w
 \frac{\partial ${1:V}}{\partial ${2:x}} $0
 endsnippet
 
-context "math()"
-snippet sq "\sqrt{}" iA
-\sqrt{${1:${VISUAL}}} $0
-endsnippet
-
-context "math()"
-snippet sr "^2" iA
-^2
-endsnippet
-
-context "math()"
-snippet cb "^3" iA
-^3
-endsnippet
-
-context "math()"
-snippet td "to the ... power" iA
-^{$1}$0
-endsnippet
-
-context "math()"
-snippet rd "to the ... power" iA
-^{($1)}$0
-endsnippet
-
-snippet __ "subscript" iA
-_{$1}$0
-endsnippet
-
-snippet ooo "\infty" iA
-\infty
-endsnippet
 
 snippet rij "mrij" i
 (${1:x}_${2:n})_{${3:$2}\\in${4:\\N}}$0
@@ -352,7 +320,6 @@ context "math()"
 snippet ynn "yn" iA
 y_{n}
 endsnippet
-
 
 context "math()"
 snippet xii "xi" iA
@@ -508,10 +475,6 @@ snippet set "set" wA
 \\{$1\\} $0
 endsnippet
 
-snippet || "mid" iA
- \mid 
-endsnippet
-
 
 context "math()"
 snippet cc "subset" Ai
@@ -641,4 +604,30 @@ snippet DD "D" iA
 \mathbb{D}
 endsnippet
 
+context "math()"
+snippet () "" b
+\left($0\right
+endsnippet
+
+context "math()"
+snippet {} "" b
+\left\\{$0\right\
+endsnippet
+
+context "math()"
+snippet || "mid" iA
+\left|$0\right|
+endsnippet
+
+snippet enum "env enumerate"
+\begin{enumerate}
+	$0
+\end{enumerate}
+endsnippet
+
+snippet eq "env enumerate"
+\begin{equation}
+	$0
+\end{equation}
+endsnippet
 # vim:ft=snippets
