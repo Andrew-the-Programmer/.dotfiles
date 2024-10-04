@@ -2,7 +2,7 @@ vim.api.nvim_create_autocmd({ "TermRequest" }, {
     desc = "Handles OSC 7 dir change requests",
     callback = function(ev)
         print("event: TermRequest:")
-        print("ev:", Dump(ev))
+        print("ev:", My.Dump(ev))
         if string.sub(vim.v.termrequest, 1, 4) == "\x1b]7;" then
             local dir = string.gsub(vim.v.termrequest, "\x1b]7;file://[^/]*", "")
             if vim.fn.isdirectory(dir) == 0 then

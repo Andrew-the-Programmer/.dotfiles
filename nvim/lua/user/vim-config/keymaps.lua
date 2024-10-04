@@ -1,69 +1,69 @@
-vim.keymap.set("n", "<leader>pv", "<cmd>Ex<CR>")
+local map = vim.keymap.set
+
+--Navigation-------------------------------------------------------------------
+
+-- Move lines in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
+-- Keep cursor in the center when scrolling
 -- vim.keymap.set("n", "J", "mzJ`z")
--- vim.keymap.set("n", "<C-d>", "<C-d>zz")
--- vim.keymap.set("n", "<C-u>", "<C-u>zz")
--- vim.keymap.set("n", "n", "nzzzv")
--- vim.keymap.set("n", "N", "Nzzzv")
-
--- greatest remap ever
--- vim.keymap.set("x", "<leader>p", [["_dP]])
-
--- next greatest remap ever : asbjornHaland
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Copy to clipboard" })
-vim.keymap.set("n", "<leader>Y", [["+Y]])
-
--- vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
-
--- This is going to get me cancelled
--- vim.keymap.set("i", "<C-n>", "<Esc>")
-
--- vim.keymap.set("n", "Q", "<nop>")
--- vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
--- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
-
--- quick fix list
--- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
--- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
--- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
--- vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
-
--- vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "Make file executable", silent = true })
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
 -- Navigate vim panes better
-vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
-vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
-vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
-vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
+vim.keymap.set({ "n" }, "<c-k>", "<cmd>wincmd k<CR>", { desc = "Navigate window up" })
+vim.keymap.set({ "n" }, "<c-j>", "<cmd>wincmd j<CR>", { desc = "Navigate window down" })
+vim.keymap.set({ "n" }, "<c-h>", "<cmd>wincmd h<CR>", { desc = "Navigate window left" })
+vim.keymap.set({ "n" }, "<c-l>", "<cmd>wincmd l<CR>", { desc = "Navigate window right" })
 
--- unbind
-vim.keymap.set("n", "<C-]>", "<Nop>")
+-- Navigate windows in terminal mode
+-- Messes up my zsh config 😢
+-- vim.keymap.set({ "t" }, "<c-k>", "<cmd>wincmd k<CR>", { desc = "Navigate window up" })
+-- vim.keymap.set({ "t" }, "<c-j>", "<cmd>wincmd j<CR>", { desc = "Navigate window down" })
+-- vim.keymap.set({ "t" }, "<c-h>", "<cmd>wincmd h<CR>", { desc = "Navigate window left" })
+-- vim.keymap.set({ "t" }, "<c-l>", "<cmd>wincmd l<CR>", { desc = "Navigate window right" })
 
--- tab switching
--- vim.keymap.set("n", "<C-Tab>", "<cmd>tabnext<CR>")
--- vim.keymap.set("n", "<C-S-Tab>", "<cmd>tabprevious<CR>")
+-- Vim: "L": move to bottom of screen
+map({ "n", "v" }, "L", "$", { desc = "Jump to end of line" })
 
-vim.keymap.set("c", "w!!", ":w !sudo tee %> /dev/null")
+-- Vim: "H": move to top of screen
+map({ "n", "v" }, "H", "^", { desc = "Jump to start of line" })
 
-vim.keymap.set("n", "<leader>tc", "<cmd>%y+<CR>", { desc = "Copy entire buffer to clipboard" })
+-- Vim: 'J': join line below to the current one with one space in between
+map({ "n" }, "J", "G", { desc = "Jump to the end" })
 
-vim.keymap.set(
-    { "n" },
-    "<localleader>cd",
-    function()
-        local dir = My.GetTermCwd()
-        vim.cmd("cd " .. dir)
-    end,
-    { noremap = true }
-)
--- tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
+-- Vim: 'K': open man page for word under the cursor
+-- See lsp config
+map({ "n" }, "K", "gg", { desc = "Jump to the start" })
 
-vim.keymap.set({ "n", "t" }, "<F1>", function()
-    My.OpenTerm()
-end)
-vim.keymap.set({ "n", "t" }, "<F2>", function()
-    My.CloseTerm()
-end)
+--Clipboard--------------------------------------------------------------------
+
+-- Copy selection to clipboard
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Copy to clipboard" })
+vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Copy line to clipboard" })
+
+-- Paste from clipboard
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]], { desc = "Paste from clipboard" })
+vim.keymap.set("n", "<leader>P", [["+P]], { desc = "Paste line from clipboard" })
+
+--Buffer-----------------------------------------------------------------------
+
+-- Make file executable
+vim.keymap.set("n", "<leader>bx", My.nvim.MakeBufExecutable, { desc = "Make buffer file executable", silent = true })
+vim.keymap.set("n", "<leader>bv", "ggVG", { desc = "Select entire buffer to clipboard" })
+vim.keymap.set("n", "<leader>by", "<cmd>%y+<CR>", { desc = "Copy entire buffer to clipboard" })
+vim.keymap.set("n", "<leader>bp", 'ggVG"+p', { desc = "Paste entire buffer to clipboard" })
+
+map("n", "<leader>w", "<cmd>w<cr>", { silent = false, desc = "Save buffer" })
+map("n", "<leader>q", "<cmd>q<cr>", { silent = false, desc = "Quit window" })
+
+-- Vim: "U": restore (undo) last changed line
+map("n", "U", "<C-r>", { desc = "Redo" })
+
+-- I have configured zsh to have vim mode, which I can enter with <esc> or <C-["
+-- When in terminal zsh, I cant exit to normal mode.
+-- See toggleterm config
+-- map("t", "<C-{", "<esc>", { desc = "Escape terminal mode" })

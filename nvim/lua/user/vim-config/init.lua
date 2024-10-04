@@ -1,9 +1,11 @@
 local vimconfig = "user.vim-config"
 
-require(vimconfig .. ".constants")
-require(vimconfig .. ".functions")
-require(vimconfig .. ".options")
-require(vimconfig .. ".keymaps")
-require(vimconfig .. ".commands")
-require(vimconfig .. ".events")
-require(vimconfig .. ".api")
+local M = {}
+
+M.options = require(vimconfig .. ".options")
+M.keymaps = require(vimconfig .. ".keymaps")
+M.events = require(vimconfig .. ".events")
+M.commands = require(vimconfig .. ".commands")
+M.theme = require(vimconfig .. ".theme")
+
+return M

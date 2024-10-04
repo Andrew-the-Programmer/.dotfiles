@@ -27,4 +27,3 @@ If configuration of plugin is large, it's configured in lua/user/plugins-config/
 (f.e. lsp is configured in lua/user/plugins-config/lsp-config.lua)
 
 All neovim related configuration is in lua/user/vim-config.
-

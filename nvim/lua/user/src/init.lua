@@ -1,2 +1,1 @@
-require 'user.src.inkscape'
-require 'user.src.theme'
+require("user.src.inkscape")

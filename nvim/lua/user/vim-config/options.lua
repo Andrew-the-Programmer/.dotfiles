@@ -1,7 +1,8 @@
 vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
--- tabs & indentation
+-- Default tabs & indentation
+-- See user.filetype_specific
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -9,7 +10,24 @@ vim.opt.expandtab = true
 
 vim.opt.smartindent = true
 
+-- Enable smart indenting (see https://stackoverflow.com/questions/1204149/smart-wrap-in-vim)
+-- vim.opt.breakindent = true
+
+-- Disable text wrap
 vim.opt.wrap = false
+
+-- Enable mouse mode
+vim.opt.mouse = "a"
+
+-- Disable showing the mode below the statusline
+vim.opt.showmode = false
+
+-- Enable ignorecase + smartcase for better searching
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Set completeopt to have a better completion experience
+vim.opt.completeopt = { "menu", "menuone", "noselect", "preview", "popup", "fuzzy" }
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -22,12 +40,14 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
+-- Enable the sign column to prevent the screen from jumping
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
-vim.opt.updatetime = 50
+vim.opt.updatetime = 250
 
--- vim.opt.colorcolumn = "80"
+-- Place a column line
+vim.opt.colorcolumn = "80"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
@@ -46,19 +66,27 @@ vim.opt.signcolumn = "yes"  -- show sign column so that text doesn't shift
 -- clipboard
 -- vim.opt.clipboard:append("unnamedplus") -- use system clipboard as default register
 
+-- Enable access to System Clipboard
+-- vim.opt.clipboard = "unnamed,unnamedplus"
+
 -- split windows
 vim.opt.splitright = true -- split vertical window to the right
 vim.opt.splitbelow = true -- split horizontal window to the bottom
 
--- turn off swapfile
--- vim.opt.swapfile = false
-
+-- Default term shell
 vim.opt.shell = "/bin/zsh"
 
+-- To source ./.nvim.lua file after nvim launch
 vim.o.exrc = true
 
-vim.opt.spelllang = "en_us"
-
+-- vim.opt.spelllang = { "en_us", "ru_ru" }
+-- vim.opt.spelllang = { "en_us", "ru" }
+-- vim.opt.spelllang = "en_us"
 vim.opt.spell = true
+-- vim.opt.spellfile = vim.fn.expand("~/.config/nvim/spell/ru.utf-8.spl")
 
--- vim.opt.spellfile = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")
+vim.env.PATH = "/home/andrew/.local/bin:" .. vim.env.PATH
+vim.env.PATH = "/home/andrew/.nvm:" .. vim.env.PATH
+vim.env.PATH = "/home/andrew/.nvm/versions/node/v22.7.0/bin:" .. vim.env.PATH
+
+vim.lsp.set_log_level("off")

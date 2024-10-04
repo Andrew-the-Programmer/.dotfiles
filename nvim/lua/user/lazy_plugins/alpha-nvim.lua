@@ -1,4 +1,6 @@
 return {
+	-- https://github.com/goolord/alpha-nvim
+	-- Fancy init screen
 	"goolord/alpha-nvim",
 	dependencies = {
 		"nvim-tree/nvim-web-devicons",

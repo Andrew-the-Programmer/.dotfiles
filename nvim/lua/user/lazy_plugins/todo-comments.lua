@@ -1,7 +1,8 @@
 return {
-    "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function ()
-        return require("user.plugins-config.comments-config")
-    end
+    -- https://github.com/folke/todo-comments.nvim
+	"folke/todo-comments.nvim",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	config = function()
+		require("todo-comments").setup()
+	end,
 }

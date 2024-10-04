@@ -1,28 +1,47 @@
--- load language specific configs
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "*" },
-    callback = function(args)
-        local buf = args.buf
-        local bo = vim.bo
-        local bo_buf = bo[buf]
-        local ft = bo_buf.filetype
-        -- print("args.buf: " .. Dump(buf))
-        -- print("vim.bo: " .. Dump(bo))
-        -- print("bo_buf: " .. Dump(bo_buf))
-        -- print("filetype: " .. Dump(ft))
+-- Load language specific configs
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = { "*" },
+	desc = "Load filetype specific settings",
+	callback = function(args)
+		local ft = vim.bo[args.buf].filetype
+        local parent = "user.filetype_specific."
+		local file = parent .. ft
 
-        local file = "user.language_specific." .. ft
-        pcall(require, file)
-    end,
+        -- Load default filetype settings
+		My.lua.Require(parent .. "default")
+
+		-- Try to load filetype settings
+		pcall(My.lua.Require, file)
+	end,
 })
 
--- vim.api.nvim_create_augroup("MyBufferEvents", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+	pattern = "*",
+	desc = "Highlight selection on yank",
+	callback = function()
+		vim.highlight.on_yank({ timeout = 200, visual = true })
+	end,
+})
 
--- vim.api.nvim_create_autocmd("BufWritePost", {
---     group = "MyBufferEvents",
---     pattern = "*",
---     callback = function()
---         Notify("Hello")
---         print("Buffer modified!")
---     end,
--- })
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("vertical_help", { clear = true }),
+	pattern = "help",
+	desc = "Open help in vertical split",
+	callback = function()
+		vim.bo.bufhidden = "unload"
+		vim.cmd.wincmd("L")
+		vim.cmd.wincmd("=")
+	end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+	desc = "Format on save",
+	callback = function()
+		if not My.opts.format_on_save then
+			return
+		end
+		-- My.nvim.Notify("Formating buffer!")
+		vim.lsp.buf.format({ async = false })
+	end,
+})
