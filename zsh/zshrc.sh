@@ -47,3 +47,5 @@ for f in "$pluginsconfigdir"/*;
 do
     zsh_add_file "$f"
 done
+
+# fastfetch

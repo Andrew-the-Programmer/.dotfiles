@@ -1,0 +1,65 @@
+global !p
+def math():
+	cmd = "join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, \"name\")'), ' > ')"
+	res = vim.eval(cmd)
+	print(res)
+	return "mkdMath" in res
+endglobal
+
+snippet beg "begin{} / end{}" bA
+\begin{$1}
+$0
+\end{$1}
+endsnippet
+
+snippet enum "env enumerate"
+\begin{enumerate}
+\item $0
+\end{enumerate}
+endsnippet
+
+snippet eq "env enumerate"
+\begin{equation}
+$0
+\end{equation}
+endsnippet
+
+snippet gather "env enumerate"
+\begin{gather}
+$0
+\end{gather}
+endsnippet
+
+snippet cases "env enumerate"
+\begin{cases}
+$0
+\end{cases}
+endsnippet
+
+snippet array "env enumerate"
+\begin{array}{$1}
+$0
+\end{array}
+endsnippet
+
+snippet pmatrix ""
+\begin{pmatrix}
+$0
+\end{pmatrix}
+endsnippet
+
+snippet pmatrixinline ""
+\begin{pmatrix}$0\end{pmatrix}
+endsnippet
+
+snippet alignleft ""
+\\AlignLeft{
+$0
+}
+endsnippet
+
+snippet aligncenter ""
+\\AlignCenter{
+$0
+}
+endsnippet

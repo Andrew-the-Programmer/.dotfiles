@@ -2,7 +2,7 @@
 
 alias ls='ls --color=auto'
 alias ll='ls -lhar'
-alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
+alias zsh-update-plugins="find ""$ZDOTDIR/plugins -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
 
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
@@ -19,39 +19,39 @@ alias lgit="lazygit"
 alias oil="nvim +StartOil"
 
 function require_clean_work_tree() {
-	# Update the index
-	git update-index -q --ignore-submodules --refresh
-	err=0
+    # Update the index
+    git update-index -q --ignore-submodules --refresh
+    err=0
 
-	# Disallow unstaged changes in the working tree
-	if ! git diff-files --quiet --ignore-submodules --; then
-		echo >&2 "err: you have unstaged changes."
-		git diff-files --name-status -r --ignore-submodules -- >&2
-		err=1
-	fi
+    # Disallow unstaged changes in the working tree
+    if ! git diff-files --quiet --ignore-submodules --; then
+        echo >&2 "err: you have unstaged changes."
+        git diff-files --name-status -r --ignore-submodules -- >&2
+        err=1
+    fi
 
-	# Disallow uncommitted changes in the index
-	if ! git diff-index --cached --quiet HEAD --ignore-submodules --; then
-		echo >&2 "err: your index contains uncommitted changes."
-		git diff-index --cached --name-status -r --ignore-submodules HEAD -- >&2
-		err=1
-	fi
+    # Disallow uncommitted changes in the index
+    if ! git diff-index --cached --quiet HEAD --ignore-submodules --; then
+        echo >&2 "err: your index contains uncommitted changes."
+        git diff-index --cached --name-status -r --ignore-submodules HEAD -- >&2
+        err=1
+    fi
 
-	if [ $err = 1 ]; then
-		echo >&2 "Please commit or stash them."
-		return 1
-	fi
+    if [ "$err" = 1 ]; then
+        echo >&2 "Please commit or stash them."
+        return 1
+    fi
 }
 
 function sgit() {
-	if ! require_clean_work_tree; then
-		return 1
-	fi
-	git "$@"
+    if ! require_clean_work_tree; then
+        return 1
+    fi
+    git "$@"
 }
 
 function gsw() {
-	sgit switch "$@"
+    sgit switch "$@"
 }
 
 alias gst='git status'
@@ -66,11 +66,11 @@ alias j="jump"
 alias zz="z -"
 
 function ChdirToScriptDir() {
-	cd "$(dirname "$0")" || exit
+    cd "$(dirname "$0")" || exit
 }
 
 function ldir() {
-	find . -mindepth 1 -maxdepth 1 -type d \( ! -iname ".*" \) | sed 's|^\./||g'
+    find . -mindepth 1 -maxdepth 1 -type d \( ! -iname ".*" \) | sed 's|^\./||g'
 }
 
 alias gh='google-chrome --proxy-server="http://127.0.0.1:8080"'
@@ -86,3 +86,30 @@ alias zf="cd \$(fzfd)"
 
 alias bat="batcat"
 alias fzfp="fzf --preview \"bat --color=always --style=numbers --line-range=:500 {}\""
+
+function ocrpdf() {
+    python3 -m ocrmypdf --force-ocr -l eng+rus "$1" "$1"
+}
+
+function getext() {
+    echo "${1##*.}"
+}
+
+function getfilename() {
+    echo "${1%.*}"
+}
+
+function webptopng() {
+    dwebp "$1" -o "$(getfilename "$1").png"
+}
+
+function convertext() {
+    magick "$1" "$(getfilename "$1").#2"
+}
+
+function randfile() {
+    find "$1" | shuf -n 1 | tr -d "\n"
+}
+
+
+
