@@ -1,10 +1,10 @@
-local mtt = My.toggleterm
-local execute_cmd = mtt.execute.execute_cmd
+local mt = My.term
+local mo = My.oil
 local oil = require("oil")
 
 local M = {}
 
-local function GetProperCwd()
+function M.GetProperCwd()
 	local cwd = vim.fn.getcwd()
 	if vim.bo.filetype == "oil" then
 		cwd = oil.get_current_dir()
@@ -13,18 +13,6 @@ local function GetProperCwd()
 		end
 	end
 	return cwd
-end
-
----@param oilbuf integer oil buffer
-function M.OpenTerm(oilbuf)
-	oilbuf = oilbuf or vim.api.nvim_get_current_buf()
-	mtt.functions.OpenTerm(My.oil.term.OilTerm, { dir = GetProperCwd() })
-end
-
----@param cmd string|string[]
----@param opts table See Send.
-function M.ExecuteCmd(cmd, opts)
-	return execute_cmd(cmd, opts)
 end
 
 function M.GetFilenameUnderCursor()
@@ -56,10 +44,9 @@ function M.OpenOilInNvimCwd()
 	M.OpenOil(cwd)
 end
 
-function M.OpenOilInTermCwd()
-	local cwd = mtt.functions.GetSavedTermCwd()
-	mtt.functions.Unfocuse()
-	M.OpenOil(cwd)
+function M.MakeFileUnderCursorExecutable()
+	local filepath = M.GetFullPathUnderCursor()
+	My.sys.MakeFileExecutable(filepath)
 end
 
 return M

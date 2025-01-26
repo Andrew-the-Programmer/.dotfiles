@@ -1,47 +1,36 @@
-local Terminal = require("toggleterm.terminal").Terminal
-local oil = require("oil")
-local mtt = My.toggleterm
+local mt = My.term
+local mo = My.oil
 
 local M = {}
 
--- M.OilTerm = mtt.term.FloatTerm:new({
---     id = mtt.functions.GetUniqueTermId(),
--- })
-
-M.OilTerm = Terminal:new({
-    on_open = function(term)
-        My.toggleterm.functions.Focuse(term)
-    end,
-    -- Need this
-    -- See My.toggleterm.term.Term
-    newline_chr = "\r",
-
-    direction = "float",
-    -- hidden = true,
-    float_opts = {
-        border = "double",
-    },
-
+---@class OilTerm : FloatTerm
+M.OilTerm = mt.FloatTerm:new({
     display_name = "OilTerm",
-    id = mtt.functions.GetUniqueTermId(),
-    count = mtt.functions.GetUniqueTermId(),
 })
 
--- function M.OilTerm:new(opts)
--- 	local s = M.OilTerm
--- 	opts = opts or {}
--- 	setmetatable(opts, { __index = s })
--- 	return opts
--- end
+function M.OilTerm:new(o)
+    o = My.lua.IfNil(o, {})
+    self.__index = self
+    o.id = My.lua.IfNil(o.id, mt.GetUniqueTermId())
+	o = setmetatable(o, self)
+	return o
+end
 
--- This fixes the issue with open
--- When open it opens term with id 2, but term has the correct id
--- mtt.functions.LoadTerm(M.OilTerm)
--- M.OilTerm.open()
--- M.OilTerm.close()
+function M.OilTerm:OpenOil()
+	local dir = self:GetCwd()
+	self:Unfocus()
+	mo.functions.OpenOil(dir)
+end
 
--- setmetatable(M.OilTerm, { __index = mtt.term.FloatTerm })
+function M.OilTerm:OpenFromOil()
+	local dir = mo.functions.GetProperCwd()
+	self:Open({ dir = dir })
+end
 
--- print(M.OilTerm.id)
+---@param opts SendConfig|nil
+function M.OilTerm:ExecuteFile(opts)
+	local filepath = My.oil.functions.GetFullPathUnderCursor()
+    mt.ExecuteFile(filepath, self, opts)
+end
 
 return M
