@@ -58,22 +58,22 @@ return {
 					documentation = cmp.config.window.bordered(),
 				},
 				completion = { completeopt = "menu,menuone,noinsert" },
-				mapping = cmp.mapping.preset.insert({
+                -- cmp.mapping.preset.insert({...}) to keep default mappings
+				mapping = {
 					-- Works with telescope
 					["<C-k>"] = cmp.mapping.select_prev_item(),
 					["<C-j>"] = cmp.mapping.select_next_item(),
-
-					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<C-l>"] = cmp.mapping.confirm({ select = true }),
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
+					-- ["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
 
 					--[[ Accept currently selected item.
                          Set `select` to `false` to only confirm explicitly selected items.
                     ]]
 					-- ["<CR>"] = cmp.mapping.confirm({ select = true }),
-				}),
+				},
 				sources = cmp.config.sources({
 					-- Snippets
 					-- { name = "vsnip" }, -- For vsnip users.

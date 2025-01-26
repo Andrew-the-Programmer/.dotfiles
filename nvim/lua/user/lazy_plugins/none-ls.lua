@@ -59,7 +59,7 @@ local function Sources(null_ls)
 		-- null_ls.builtins.formatting.pyink,
 
 		-- c++
-		null_ls.builtins.diagnostics.cpplint,
+		-- null_ls.builtins.diagnostics.cpplint,
 		null_ls.builtins.formatting.clang_format,
 		null_ls.builtins.formatting.uncrustify,
 

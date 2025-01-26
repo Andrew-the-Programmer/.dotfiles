@@ -4,6 +4,7 @@ local M = {}
 
 M.options = require(vimconfig .. ".options")
 M.keymaps = require(vimconfig .. ".keymaps")
+M.translation = require(vimconfig .. ".translation")
 M.events = require(vimconfig .. ".events")
 M.commands = require(vimconfig .. ".commands")
 M.theme = require(vimconfig .. ".theme")

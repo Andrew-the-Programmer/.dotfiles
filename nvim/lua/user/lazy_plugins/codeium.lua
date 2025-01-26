@@ -3,7 +3,7 @@ return {
     "Exafunction/codeium.vim",
     -- event = "BufEnter",
     config = function()
-        vim.g.codeium_disable_bindings = 1
+        -- vim.g.codeium_disable_bindings = 1
         vim.g.codeium_no_map_tab = 1
         -- vim.g.codeium_tab_fallback = '<C-g>'
         -- Change '<C-g>' here to any keycode you like.
@@ -13,7 +13,7 @@ return {
         vim.keymap.set("i", "<C-n>", function()
             return vim.fn["codeium#CycleCompletions"](1)
         end, { expr = true, silent = true, desc = "Codeium Cycle Completions forward" })
-        vim.keymap.set("i", "<C-p>", function()
+        vim.keymap.set("i", "<C-N>", function()
             return vim.fn["codeium#CycleCompletions"](-1)
         end, { expr = true, silent = true, desc = "Codeium Cycle Completions backward" })
         vim.keymap.set("i", "<C-x>", function()
