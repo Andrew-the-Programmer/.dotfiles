@@ -11,8 +11,6 @@ local function LspKeymaps(event)
 	AddKeymap("n", "<leader>cgd", vim.lsp.buf.definition, { desc = "Go to definition" })
 	AddKeymap("n", "<leader>cgD", vim.lsp.buf.declaration, { desc = "Go to definition" })
 
-	AddKeymap("n", "<leader>cvd", vim.lsp.buf.hover, { desc = "View definition" })
-	-- Vim: n: M:
 	AddKeymap("n", "M", vim.lsp.buf.hover, { desc = "View definition" })
 
 	AddKeymap("n", "<leader>cws", vim.lsp.buf.workspace_symbol, { desc = "Workspace symbol" })
@@ -61,14 +59,18 @@ return {
 		"williamboman/mason.nvim",
 		lazy = false,
 		config = function()
-			require("mason").setup({
+			local mason = require("mason")
+			mason.setup({
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
 				auto_install = true,
 				ensure_installed = {
-					"clangd",
 					"lua_ls",
-					"clang-format",
-					"codelldb",
-					"bashls",
 				},
 			})
 		end,
@@ -77,7 +79,6 @@ return {
 		-- https://github.com/neovim/nvim-lspconfig
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPost" },
-		cmd = { "LspInfo", "LspInstall", "LspUninstall", "Mason" },
 		config = function()
 			vim.diagnostic.config({
 				-- update_in_insert = true,
@@ -148,10 +149,6 @@ return {
 								diagnostics = {
 									globals = {
 										"vim",
-										"it",
-										"describe",
-										"before_each",
-										"after_each",
 									},
 								},
 							},
@@ -172,8 +169,6 @@ return {
 			require("mason-lspconfig").setup({
 				handlers = handlers,
 			})
-
-			vim.lsp.set_log_level("DEBUG")
 		end,
 	},
 	{

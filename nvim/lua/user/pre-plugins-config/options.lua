@@ -1,3 +1,5 @@
+My.opts = {}
+
 vim.opt.nu = true
 vim.opt.relativenumber = false
 
@@ -90,3 +92,5 @@ vim.env.PATH = "/home/andrew/.nvm:" .. vim.env.PATH
 vim.env.PATH = "/home/andrew/.nvm/versions/node/v22.7.0/bin:" .. vim.env.PATH
 
 vim.lsp.set_log_level("off")
+
+vim.opt.timeoutlen = 40

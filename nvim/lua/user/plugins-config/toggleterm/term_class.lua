@@ -4,24 +4,43 @@ local mt = My.toggleterm
 
 local M = {}
 
+function M.new_subclass(self, o)
+    o = My.lua.IfNil(o, {})
+    o.new_subclass = My.lua.IfNil(o.new_subclass, function (oo)
+        return M.new_subclass(o, oo)
+    end)
+    self.__index = self
+    o = setmetatable(o, self)
+    return o
+end
+
 ---@class Term : Terminal
 ---@field cwd string
+---@field new_subclass fun(o: table):Term
 M.Term = Terminal:new({
     display_name = "Term",
     newline_chr = "\r",
-    id = mt.functions.GetUniqueTermId(),
 })
 
----@return Term
+M.Term.new_subclass = function(o)
+    return M.new_subclass(M.Term, o)
+end
+
 function M.Term:new(o)
     o = My.lua.IfNil(o, {})
-    self.__index = self
     o.id = My.lua.IfNil(o.id, mt.functions.GetUniqueTermId())
-    o.cwd = o.dir or mt.functions.GetProperCwd()
+    o.cwd = My.lua.IfNil(o.dir, mt.functions.GetProperCwd())
     o.on_open = My.lua.IfNil(o.on_open, function(term)
+        term:Focus()
         term:ClearCommandLine()
     end)
+    -- No effect
+    -- o.on_exit = My.lua.IfNil(o.on_exit, function(term)
+    --     term:Load()
+    -- end)
+    self.__index = self
     o = setmetatable(o, self)
+    o:Load()
     return o
 end
 
@@ -55,7 +74,7 @@ end
 ---@param opts SendConfig|nil
 ---@param clear boolean|nil
 function M.Term:Send(cmd, opts, clear)
-    -- self:Load()
+    self:Open()
     clear = My.lua.IfNil(clear, false)
     if clear then
         self:ClearCommandLine()
@@ -63,7 +82,7 @@ function M.Term:Send(cmd, opts, clear)
     opts = opts or M.SendConfig:new()
     local newline_chr = self.newline_chr
     if not opts.execute then
-        newline_chr = " "
+        newline_chr = ""
     end
     if type(cmd) == "table" then
         cmd = table.concat(cmd, " ")
@@ -121,35 +140,29 @@ function M.Term:GetSavedCwd()
     return cwd
 end
 
----@param opts table|nil
-function M.Term:Open(opts)
+function M.Term:Open()
+    -- print(self.id, self.count, self.job_id)
     if self:is_open() then
         return
     end
-    opts = opts or {}
-    local cwd = opts.dir or mt.functions.GetProperCwd()
     self:open()
-    -- TODO: fix: term dont cd on reopen
-    self:ChangeDir(cwd)
 end
 
 function M.Term:Close()
     self:close()
 end
 
----@param opts table|nil
-function M.Term:Toggle(opts)
+function M.Term:Toggle()
     if self:is_open() then
         self:Close()
         return
     end
-    self:Open(opts)
+    self:Open()
 end
 
----@param opts table|nil
-function M.Term:Reopen(opts)
+function M.Term:Reopen()
     self:Close()
-    self:Open(opts)
+    self:Open()
 end
 
 function M.Term:Load()
@@ -157,7 +170,7 @@ function M.Term:Load()
         return
     end
     self:Open()
-    self:Close()
+    self:Unfocus()
 end
 
 function M.Term:Focus()
@@ -170,6 +183,9 @@ function M.Term:Unfocus()
     ui.stopinsert()
 end
 
+function M.Term:SaveCwd()
+    self:ChangeDir(".")
+end
 function M.Term:GetCwd()
     local saved_cwd = self:GetSavedCwd()
     if saved_cwd ~= self.cwd then

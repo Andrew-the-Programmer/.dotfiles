@@ -106,7 +106,7 @@ snippet floor "floor" w
 endsnippet
 
 context "math()"
-snippet oo "infty" wA
+snippet infty "infty" w
 \infty
 endsnippet
 
@@ -131,22 +131,27 @@ snippet Prod "prod"
 endsnippet
 
 context "math()"
-snippet "un " "union" rwA
+snippet "union" "union" rw
 \cup 
 endsnippet
 
 context "math()"
-snippet "ins " "intersection" rwA
+snippet "intersection" "intersection" rw
 \cap 
 endsnippet
 
 context "math()"
-snippet "or " "union" rwA
+snippet "or" "union" rw
 \lor 
 endsnippet
 
 context "math()"
-snippet "not " "union" rwA
+snippet "and" "union" rw
+\land 
+endsnippet
+
+context "math()"
+snippet "not" "union" rw
 \lnot 
 endsnippet
 
@@ -158,11 +163,6 @@ endsnippet
 context "math()"
 snippet And "Big logic and" i
 \bigwedge_{$1}^{$2}{$0}
-endsnippet
-
-context "math()"
-snippet "and " "union" rwA
-\land 
 endsnippet
 
 context "math()"
@@ -238,12 +238,11 @@ endsnippet
 context "math()"
 snippet "(\\?[A-Za-z0-9]+\..+)+(/)" "" wrA
 `!p
+operations_history: list[str] = []
+
+
 def ParseArgs(args: str) -> list[str]:
     return args.split(",")
-
-
-def IndexD(prefix: str, index: str) -> str:
-    return f"{{{prefix}}}_{{{index}}}"
 
 
 def Perp(prefix: str, args: str = None) -> str:
@@ -254,7 +253,15 @@ def Parallel(prefix: str, args: str = None) -> str:
     return IndexD(prefix, r"\parallel")
 
 
+def IndexD(prefix: str, index: str) -> str:
+    if len(operations_history) > 1 and operations_history[-2] == "^":
+        return f"{prefix}_{{{index}}}"
+    return f"{{{prefix}}}_{{{index}}}"
+
+
 def IndexU(prefix: str, index: str) -> str:
+    if len(operations_history) > 1 and operations_history[-2] == "_":
+        return f"{prefix}^{{{index}}}"
     return f"{{{prefix}}}^{{{index}}}"
 
 
@@ -324,6 +331,7 @@ getFunc: dict[str] = {
 def ParseCommand(cmd: str) -> tuple:
     command = cmd[0]
     args = cmd[1:]
+    operations_history.append(command)
     return getFunc[command], args
 
 
@@ -546,4 +554,11 @@ endsnippet
 context "math()"
 snippet aligncenteri ""
 \\AlignCenter{$0}
+endsnippet
+
+context "math()"
+snippet proof ""
+\\Proof{
+$0
+}
 endsnippet

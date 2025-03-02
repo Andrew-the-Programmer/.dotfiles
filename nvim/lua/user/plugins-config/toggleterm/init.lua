@@ -13,4 +13,9 @@ My.term = My.lua.CombineTables(
 require("user.plugins-config.toggleterm.config")
 require("user.plugins-config.toggleterm.keymaps")
 
+-- print(My.term.Term.job_id)
+-- print(My.term.FloatTerm.job_id)
+-- print(My.term.TermExecute.job_id)
+
+
 return My.term

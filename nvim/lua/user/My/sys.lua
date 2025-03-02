@@ -50,4 +50,14 @@ function M.DeleteFile(file)
 	end
 end
 
+function M.FileBaseName(file)
+	return vim.fn.fnamemodify(file, ":t:r")
+end
+
+function M.FileExt(file)
+	return vim.fn.fnamemodify(file, ":e")
+end
+
+
+
 return M

@@ -1,35 +1,66 @@
 local M = {}
 
+---@generic T,U
+---@param value T
+---@param default U
+---@return T|U
 function M.IfNil(value, default)
-    if value == nil then
-        return default
-    end
-    return value
+	return vim.F.if_nil(value, default)
 end
 
+---@param o table
+---@param opts {sep: string, endl: string, indentation: integer}
 function M.Dump(o, opts)
 	opts = opts or {}
-	local sep = opts.sep or ", "
+	local sep = opts.sep or ","
 	local endl = opts.endl or "\n"
+	local tab = "  "
+	local indentation = opts.indentation or 0
 	-- Convert lua values to human readable string
 	if type(o) ~= "table" then
-		return tostring(o) .. endl
+		return tostring(o)
 	end
-	local s = "{" .. sep
+	local empty = true
+	indentation = indentation + 1
+	local s = "{" .. endl
 	for k, v in pairs(o) do
-		if type(k) ~= "number" then
-			k = '"' .. k .. '"'
-		end
-		s = s .. "[" .. k .. "] = " .. M.Dump(v, { sep = sep, endl = "" }) .. sep
+		empty = false
+		s = ("%s%s[%s] = %s%s%s"):format(
+			s,
+			string.rep(tab, indentation),
+			tostring(k),
+			M.Dump(v, {
+				sep = sep,
+				endl = endl,
+				indentation = indentation + 1,
+			}),
+			sep,
+			endl
+		)
 	end
-	return s .. "}" .. endl
+	if empty then
+		return "{}"
+	end
+	return s .. string.rep(tab, indentation - 2) .. "}"
 end
 
+---@param ... table
 function M.CombineTables(...)
 	local result = {}
 	for _, t in ipairs({ ... }) do
 		for k, v in pairs(t) do
 			result[k] = v
+		end
+	end
+	return result
+end
+
+---@param ... table
+function M.CombineLists(...)
+	local result = {}
+	for _, t in ipairs({ ... }) do
+		for _, v in pairs(t) do
+			table.insert(result, v)
 		end
 	end
 	return result
@@ -91,6 +122,25 @@ function M.GetCmdOutput(cmd)
 	output = string.sub(output, nl_pos + 1, -1)
 	output = string.gsub(output, "\n", "")
 	return output
+end
+
+function M.Copy(t)
+	local u = {}
+	for k, v in pairs(t) do
+		u[k] = v
+	end
+	return setmetatable(u, getmetatable(t))
+end
+
+function M.Split(inputstr, sep)
+	if sep == nil then
+		sep = "%s"
+	end
+	local t = {}
+	for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+		table.insert(t, str)
+	end
+	return t
 end
 
 return M

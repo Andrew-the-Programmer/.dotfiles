@@ -1,9 +1,10 @@
+local Terminal = require("toggleterm.terminal").Terminal
 local mt = My.toggleterm
 
 local M = {}
 
 ---@class FloatTerm : Term
-M.FloatTerm = mt.term.Term:new({
+M.FloatTerm = mt.term.Term.new_subclass({
     display_name = "FloatTerm",
     direction = "float",
     float_opts = {
@@ -11,40 +12,26 @@ M.FloatTerm = mt.term.Term:new({
     },
 })
 
-function M.FloatTerm:new(o)
-    o = My.lua.IfNil(o, {})
-    self.__index = self
-    o.id = My.lua.IfNil(o.id, mt.functions.GetUniqueTermId())
-    o = setmetatable(o, self)
-    return o
-end
-
 ---@class TermExecute : FloatTerm
-M.TermExecute = M.FloatTerm:new({
+M.TermExecute = M.FloatTerm.new_subclass({
     display_name = "TermExecute",
 })
 
-function M.TermExecute:new(o)
-    o = My.lua.IfNil(o, {})
-    self.__index = self
-    o.id = My.lua.IfNil(o.id, mt.functions.GetUniqueTermId())
-    o = setmetatable(o, self)
-    return o
-end
+local eterm = M.TermExecute:new()
 
 ---@param file string
 ---@param term Term
 ---@param opts SendConfig|nil
 function M.ExecuteFile(file, term, opts)
     ---@type Term
-    term = My.lua.IfNil(term, M.TermExecute)
+    term = My.lua.IfNil(term, eterm)
     local nil_opts = (opts == nil)
     opts = opts or mt.term.SendConfig:new()
     if nil_opts then
         opts.execute = false
     end
     local dir = vim.fn.fnamemodify(file, ":p:h")
-    term:Open({ dir = dir })
+    term:ChangeDir(dir)
     term:Send(file, opts)
 end
 

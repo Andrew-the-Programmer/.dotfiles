@@ -1,5 +1,9 @@
 local M = {}
 
-M.vim_options = require "user.pre-plugins-config.vim-options"
+M.options = require("user.pre-plugins-config.options")
+M.keymaps = require("user.pre-plugins-config.keymaps")
+M.events = require("user.pre-plugins-config.events")
+M.commands = require("user.pre-plugins-config.commands")
+-- M.theme = require("user.pre-plugins-config.theme")
 
 return M

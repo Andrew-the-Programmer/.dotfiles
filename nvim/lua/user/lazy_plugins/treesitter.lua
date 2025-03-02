@@ -21,6 +21,7 @@ return {
 				"json",
 				"vim",
 				"markdown",
+                "sql",
 			},
 
 			sync_install = false,

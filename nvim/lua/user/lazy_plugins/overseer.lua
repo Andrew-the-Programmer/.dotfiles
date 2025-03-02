@@ -3,7 +3,7 @@ return {
 	-- Build tasks for projects
 	"stevearc/overseer.nvim",
 	opts = {
-		templates = { "builtin", "user.cpp_build" },
+		templates = {},
 	},
 	config = function()
 		local overseer = require("overseer")

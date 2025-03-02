@@ -1,5 +1,5 @@
 return {
-    -- https://github.com/rcarriga/nvim-notify
+	-- https://github.com/rcarriga/nvim-notify
 	"rcarriga/nvim-notify",
 	event = "VeryLazy",
 	config = function()
@@ -24,6 +24,11 @@ return {
 			end
 			return notify(message, level, merged_opts)
 		end
+
+		notify.setup({
+			timeout = 1500,
+			stages = "static",
+		})
 
 		-- Update colors to use catpuccino colors
 		-- vim.cmd([[

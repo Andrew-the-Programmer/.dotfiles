@@ -34,6 +34,8 @@ return {
 			"onsails/lspkind.nvim",
 			"windwp/nvim-ts-autotag",
 			"windwp/nvim-autopairs",
+
+			"kristijanhusak/vim-dadbod-ui",
 		},
 		config = function()
 			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
@@ -58,7 +60,7 @@ return {
 					documentation = cmp.config.window.bordered(),
 				},
 				completion = { completeopt = "menu,menuone,noinsert" },
-                -- cmp.mapping.preset.insert({...}) to keep default mappings
+				-- cmp.mapping.preset.insert({...}) to keep default mappings
 				mapping = {
 					-- Works with telescope
 					["<C-k>"] = cmp.mapping.select_prev_item(),
@@ -75,40 +77,38 @@ return {
 					-- ["<CR>"] = cmp.mapping.confirm({ select = true }),
 				},
 				sources = cmp.config.sources({
-					-- Snippets
-					-- { name = "vsnip" }, -- For vsnip users.
-					-- { name = 'luasnip' }, -- For luasnip users.
 					{
 						name = "ultisnips",
-						max_item_count = 7,
-						group_index = 0,
-					}, -- For ultisnips users.
-					-- { name = 'snippy' }, -- For snippy users.
+					},
+				}, {
 					{
 						name = "nvim_lsp",
-						-- max_item_count = 3,
-						-- group_index = 0,
-					}, -- lsp
+					},
+					{
+						name = "vim-dadbod-completion",
+					},
+				}, {
+					{
+						name = "codeium",
+						max_item_count = 3,
+					},
 					{
 						name = "buffer",
 						max_item_count = 3,
-						-- group_index = 0,
-					}, -- text within current buffer
+					},
 					{
 						name = "path",
 						max_item_count = 3,
-						-- group_index = 0,
-					}, -- file system paths
+					},
+				}, {
 					{
 						name = "nvim-lsp-signature-help",
 						max_item_count = 3,
-						-- group_index = 0,
 					},
-
+				}, {
 					-- AI
-					-- Don't have it 😭
+					-- Don't have it, too broke 😭
 					-- { name = "copilot", max_item_count = 3, group_index = 4 },
-
 					{
 						name = "lazydev",
 						max_item_count = 3,
@@ -124,13 +124,13 @@ return {
 						maxwidth = 50,
 						ellipsis_char = "...",
 						menu = {
+							ultisnips = "[UltiSnips]",
 							nvim_lsp = "[LSP]",
 							buffer = "[Buffer]",
 							path = "[PATH]",
 							luasnip = "[LuaSnip]",
-							copilot = "[Copilot]",
-							ultisnips = "[UltiSnips]",
 							lazydev = "[LazyDev]",
+							copilot = "[Copilot]",
 						},
 					}),
 				},

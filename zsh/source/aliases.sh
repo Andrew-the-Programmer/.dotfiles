@@ -111,5 +111,6 @@ function randfile() {
     find "$1" | shuf -n 1 | tr -d "\n"
 }
 
-
-
+function copy_image() {
+    xclip -selection clipboard -target image/png -i < "$1"
+}

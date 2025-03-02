@@ -37,9 +37,29 @@ function M.SilentExecCmdInBackground(cmd)
 	vim.cmd("silent exec " .. My.lua.Surround("!tmux new -d " .. My.lua.Surround(cmd, '"'), "'"))
 end
 
+---@param cmd string
+function M.ExecCmd(cmd)
+	vim.cmd("exec " .. My.lua.Surround("!" .. cmd, "'"))
+end
+
+-- return (row, col)
 function M.GetCursorPos()
 	local _, row, col = unpack(vim.fn.getpos("."))
 	return row, col
+end
+
+---@param n integer? n > 0 -> go down / n < 0 -> go up
+function M.GoDown(n)
+	n = My.lua.IfNil(n, 1)
+	local row, col = M.GetCursorPos()
+	vim.api.nvim_win_set_cursor(0, { row + n, col })
+end
+
+---@param n integer n > 0 -> go right / n < 0 -> go left
+function M.GoRight(n)
+	n = My.lua.IfNil(n, 1)
+	local row, col = M.GetCursorPos()
+	vim.api.nvim_win_set_cursor(0, { row, col + n })
 end
 
 ---@deprecated
@@ -69,13 +89,24 @@ function M.AppendCmdOutput(cmd, opts)
 	M.SetLineWithCmdOutput(cmd, opts)
 end
 
+---@param n integer|?
+---@param opts {buffer: integer|?, strict_indexing: boolean|?} | ?
+function M.GetLine(n, opts)
+	opts = opts or {}
+	n = n or 0
+	local buffer = opts.buffer or 0
+	local strict_indexing = opts.strict_indexing or true
+	if n == 0 then
+		return vim.api.nvim_get_current_line()
+	end
+	return vim.api.nvim_buf_get_lines(buffer, n - 1, n, strict_indexing)[1]
+end
+
 ---@param text string
----@param opts table | nil
----@param opts.line_number integer | nil
----@param opts.buffer integer | nil
+---@param opts { buffer: integer|?, line_number: integer|? } | ?
 function M.SetLine(text, opts)
 	opts = opts or {}
-    local row, _ = M.GetCursorPos()
+	local row, _ = M.GetCursorPos()
 	local line_number = opts.line_number or row
 	local buffer = opts.buffer or 0
 	local s = line_number - 1
@@ -86,32 +117,36 @@ function M.SetLine(text, opts)
 end
 
 ---@param text string
+---@param opts { buffer: integer|?, pos: {row: integer, col: integer} }|?
+function M.Insert(text, opts)
+	opts = opts or {}
+	local pos = opts.pos
+	local row, col = M.GetCursorPos()
+	if pos then
+		row, col = pos.row, pos.col
+	end
+    print(row, col)
+	local line = M.GetLine(row)
+	line = string.sub(line, 1, col) .. text .. string.sub(line, col + 1, -1)
+	print(line)
+	local buffer = opts.buffer or 0
+	M.SetLine(line, { line_number = row, buffer = buffer })
+end
+
+---@param text string
 ---@param opts table | nil
 ---@param opts.line_number integer | nil after which line
 ---@param opts.buffer integer | nil
 function M.InsertLine(text, opts)
 	opts = opts or {}
-    local row, _ = M.GetCursorPos()
+	local row, _ = M.GetCursorPos()
 	local line_number = opts.line_number or row
 	local buffer = opts.buffer or 0
 	local s = line_number - 1
 	local f = line_number
 	local lines = vim.api.nvim_buf_get_lines(buffer, s, f, true)
-    table.insert(lines, line_number - s + 1, text)
+	table.insert(lines, line_number - s + 1, text)
 	vim.api.nvim_buf_set_lines(buffer, s, f, true, lines)
-end
-
----@param n integer
----@param opts table | nil
----@param buffer integer | nil
-function M.GetLine(n, opts)
-	opts = opts or {}
-	local buffer = opts.buffer or 0
-	local strict_indexing = opts.strict_indexing or true
-	if n == 0 then
-		return vim.api.nvim_get_current_line()
-	end
-	return vim.api.nvim_buf_get_lines(buffer, n - 1, n, strict_indexing)[1]
 end
 
 ---@param text string
@@ -203,6 +238,28 @@ function M.EnterNormalMode()
 	-- vim.cmd("startinsert")
 	-- vim.cmd("norm! i")
 	-- vim.cmd("")
+end
+
+function M.Dir()
+	return vim.fn.expand("%:p:h")
+end
+
+function M.File()
+	return vim.fn.expand("%:p")
+end
+
+function M.FileBaseName()
+	return My.sys.FileBaseName(M.File())
+end
+
+function M.SetCursor(pos)
+	vim.fn.setpos(".", { 0, pos[1], pos[2], 0 })
+end
+
+function M.ViewInside(pos_1, pos2)
+	M.SetCursor(pos_1)
+	vim.cmd("normal v")
+	M.SetCursor(pos2)
 end
 
 return M

@@ -1,7 +1,10 @@
 local mt = My.term
 
+local float = mt.FloatTerm:new()
+float:Load()
+
 vim.keymap.set("n", "<leader>tt", function()
-    My.term.FloatTerm:Open()
+    float:Open()
 end, { desc = "Open float terminal" })
 
 vim.keymap.set(

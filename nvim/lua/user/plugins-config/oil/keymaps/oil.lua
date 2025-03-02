@@ -13,6 +13,8 @@ local keymaps = {
 	["<C-t>"] = { "actions.select", opts = { tab = true }, desc = "Open the entry in new tab" },
 	["<C-c>"] = "actions.close",
 	["<C-R>"] = "actions.refresh",
+	["<A-h>"] = "actions.parent",
+	["<A-l>"] = { "actions.select", opts = { close = false }, desc = "Open" },
 	["-"] = "actions.parent",
 	["_"] = "actions.open_cwd",
 	["`"] = {
@@ -71,15 +73,15 @@ local keymaps = {
 		desc = "Sort by type->mtime->name",
 	},
 	["<leader>te"] = {
-        function()
-            mo.term.OilTerm:ExecuteFile()
-        end,
+		function()
+			mo.term.oil_term:ExecuteFile()
+		end,
 		desc = "Execute file under cursor",
 	},
 	["<leader>tt"] = {
-        function ()
-		    mo.term.OilTerm:OpenFromOil()
-        end,
+		function()
+			mo.term.oil_term:OpenFromOil()
+		end,
 		desc = "Open terminal",
 	},
 
@@ -88,17 +90,29 @@ local keymaps = {
 		desc = "Make file under cursor executable",
 		silent = false,
 	},
-	["<localleader>id"] = {
+	["<localleader>Id"] = {
 		function()
 			oil.set_columns({ "icon", "permissions", "size", "mtime" })
 		end,
 		desc = "Set columns to detailed",
 	},
-	["<localleader>ic"] = {
+	["<localleader>Ic"] = {
 		function()
 			oil.set_columns({ "icon" })
 		end,
 		desc = "Set columns to compact",
+	},
+	["<localleader>ip"] = {
+		function()
+			mo.img_paste.PasteImage()
+		end,
+		desc = "Paste image from clipboard",
+	},
+	["<localleader>ic"] = {
+		function()
+			mo.img_paste.CopyImage()
+		end,
+		desc = "Paste image from clipboard",
 	},
 	-- ["<localleader>:"] = {
 	-- 	"actions.open_cmdline",
