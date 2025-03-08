@@ -119,13 +119,12 @@ local mappings = {
 	},
 	["<leader>oie"] = {
 		action = function()
-			if not obsidian.util.cursor_on_markdown_link(nil, nil, true, true) then
+			local fig_path = mof.GetImgLinkPath()
+			if fig_path == nil then
 				print("Cursor is not on a markdown link")
 				return
 			end
-			local fig_name = obsidian.util.parse_cursor_link()
-			local img_folder = mof.GetImgFolder()
-			local fig_path = img_folder:joinpath(fig_name).filename
+            print(fig_path)
             mof.ImageEdit(fig_path)
 		end,
 		opts = { buffer = true, desc = "Edit Obsidian image" },

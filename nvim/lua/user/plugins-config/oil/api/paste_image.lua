@@ -1,5 +1,5 @@
 local M = {}
-local img_paste = require("user.plugins-config.obsidian.paste_image")
+local img_paste = require("user.plugins-config.obsidian.obsidian_img_paste")
 local oil = require("oil")
 local mo = My.oil
 
