@@ -31,15 +31,8 @@ local opts = {
     disable_frontmatter = false,
     workspaces = {
         {
-            name = "Second Brain",
-            path = "~/MEGA/SecondBrain",
-            overrides = {
-                notes_subdir = "Zettelkasten",
-            },
-        },
-        {
             name = "mipt_notes",
-            path = "~/MEGA/mipt/mipt_notes",
+            path = "~/my/mipt/mipt_notes",
             overrides = {
                 notes_subdir = "notes",
             },

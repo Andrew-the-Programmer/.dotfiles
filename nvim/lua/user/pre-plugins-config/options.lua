@@ -29,7 +29,8 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Set completeopt to have a better completion experience
-vim.opt.completeopt = { "menu", "menuone", "noselect", "preview", "popup", "fuzzy" }
+-- NOTE: Results in strange error in arch linux.
+-- vim.opt.completeopt = { "menu", "menuone", "noselect", "preview", "popup", "fuzzy" }
 
 vim.opt.swapfile = false
 vim.opt.backup = false

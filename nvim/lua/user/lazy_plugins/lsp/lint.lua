@@ -14,7 +14,6 @@ return {
 				"write_good",
 				"alex",
 				-- "markdownlint",
-				-- "mdl",
 				"proselint",
 				-- "textlint",
 			},
