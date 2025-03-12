@@ -1,0 +1,43 @@
+\usepackage{my_preamble}
+\usepackage{my_units}
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\usepackage[fontsize=15pt]{scrextend}
+
+% #1 - Title
+\newcommand{\MiptTitle}[1]{
+	\begin{titlepage}
+		\begin{center}
+			\includegraphics[width=10cm,height=7cm,keepaspectratio]{mipt_eng_text_png.png}\\
+		\end{center}
+
+		\begin{center}
+			{\large МОСКОВСКИЙ ФИЗИКО-ТЕХНИЧЕСКИЙ ИНСТИТУТ (НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ УНИВЕРСИТЕТ)}
+		\end{center}
+		\begin{center}
+			{\large Физтех-школа прикладной математики и информатики}
+		\end{center}
+
+		\vspace{3cm}
+		{\large
+			\begin{center}
+				{\bf #1}\\ % Title
+			\end{center}
+		}
+		\vspace{2cm}
+		\begin{flushright}
+			{\large Автор:\\ Чикин Андрей Павлович \\
+				\vspace{0.2cm}
+				Б05-304}
+		\end{flushright}
+		\vfill
+		\begin{center}
+			Долгопрудный, \the\year{}
+		\end{center}
+	\end{titlepage}
+}
+
+\newcommand{\MiptLabTitle}[2]{
+	\MiptTitle{Отчёт о выполнении лабораторной работы #1\\#2}
+}
