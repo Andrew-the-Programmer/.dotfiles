@@ -11,6 +11,7 @@ export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export PATH=$HOME/.miniconda/bin:$PATH
 export PATH=$HOME/.local/include:$PATH
+export TEXMFHOME=~/texmf
 
 # eval "$(fnm env)"
 eval "$(zoxide init zsh)"
@@ -32,9 +33,11 @@ fi
 [[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh
 
 # Jump
-source `jump-bin --zsh-integration`
+# source `jump-bin --zsh-integration`
 
 # Set up nvm
 # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# source "$HOME/.venvs/MyEnv/bin/activate"

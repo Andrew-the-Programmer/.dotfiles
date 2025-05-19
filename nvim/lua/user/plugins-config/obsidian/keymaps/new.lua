@@ -124,7 +124,6 @@ local mappings = {
 				print("Cursor is not on a markdown link")
 				return
 			end
-            print(fig_path)
             mof.ImageEdit(fig_path)
 		end,
 		opts = { buffer = true, desc = "Edit Obsidian image" },

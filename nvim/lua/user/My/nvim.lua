@@ -4,6 +4,24 @@ function M.Notify(msg)
 	vim.notify(msg, vim.log.levels.INFO)
 end
 
+---@class Pos
+---@field row integer
+---@field col integer
+M.Pos = {}
+
+function M.Pos:new(row, col)
+	local o = {}
+	o.row = row
+	o.col = col
+	self.__index = self
+	o = setmetatable(o, self)
+	return o
+end
+
+function M.Pos:unpack()
+	return self.row, self.col
+end
+
 ---@deprecated
 function M.Execute(list_of_functions)
 	list_of_functions = list_of_functions or {}
@@ -42,23 +60,71 @@ function M.ExecCmd(cmd)
 	vim.cmd("exec " .. My.lua.Surround("!" .. cmd, "'"))
 end
 
--- return (row, col)
+---@return Pos
 function M.GetCursorPos()
 	local _, row, col = unpack(vim.fn.getpos("."))
-	return row, col
+	return M.Pos:new(row, col)
 end
+
+---@return Pos, Pos
+function M.GetVisualSelection()
+	local _, srow, scol = unpack(vim.fn.getpos("v"))
+	local _, erow, ecol = unpack(vim.fn.getpos("."))
+	local s, e = M.Pos:new(srow, scol), M.Pos:new(erow, ecol)
+	if srow > erow or (srow == erow and scol > ecol) then
+		s, e = e, s
+	end
+	if vim.fn.mode() == "V" then
+		return M.Pos:new(s.row, 1), M.Pos:new(e.row, M.GetLine(e.row):len())
+	end
+	return s, e
+end
+
+---@param text string
+---@param from Pos
+---@param to Pos
+function M.SubstituteText(text, from, to)
+	local buffer = 0
+	local lines = vim.api.nvim_buf_get_lines(buffer, from.row - 1, to.row, true)
+
+	local lines_text = table.concat(lines, "\n")
+
+	local s = from.col
+	local e = to.col
+
+	for l = from.row, to.row - 1 do
+		e = e + lines[l - from.row + 1]:len() + 1
+	end
+
+	lines_text = My.lua.Substitute(lines_text, text, s, e)
+
+	lines = My.lua.Split(lines_text, "\n")
+
+	vim.api.nvim_buf_set_lines(buffer, from.row - 1, to.row, true, lines)
+end
+
+---@param text string
+function M.SubstituteVisualSelection(text)
+	local from, to = M.GetVisualSelection()
+	to.col = to.col - 1
+	M.SubstituteText(text, from, to)
+end
+
+-- vim.keymap.set("v", "<C-x>", function()
+-- 	M.SubstituteVisualSelection("text")
+-- end, { desc = "Substitute visual selection" })
 
 ---@param n integer? n > 0 -> go down / n < 0 -> go up
 function M.GoDown(n)
 	n = My.lua.IfNil(n, 1)
-	local row, col = M.GetCursorPos()
+	local row, col = M.GetCursorPos():unpack()
 	vim.api.nvim_win_set_cursor(0, { row + n, col })
 end
 
 ---@param n integer n > 0 -> go right / n < 0 -> go left
 function M.GoRight(n)
 	n = My.lua.IfNil(n, 1)
-	local row, col = M.GetCursorPos()
+	local row, col = M.GetCursorPos():unpack()
 	vim.api.nvim_win_set_cursor(0, { row, col + n })
 end
 
@@ -102,11 +168,19 @@ function M.GetLine(n, opts)
 	return vim.api.nvim_buf_get_lines(buffer, n - 1, n, strict_indexing)[1]
 end
 
+---@param from Pos
+---@param to Pos
+function M.GetText(from, to)
+	local buffer = 0
+	local lines = vim.api.nvim_buf_get_text(buffer, from.row - 1, from.col - 1, to.row - 1, to.col, {})
+	return table.concat(lines, "\n")
+end
+
 ---@param text string
 ---@param opts { buffer: integer|?, line_number: integer|? } | ?
 function M.SetLine(text, opts)
 	opts = opts or {}
-	local row, _ = M.GetCursorPos()
+	local row, _ = M.GetCursorPos():unpack()
 	local line_number = opts.line_number or row
 	local buffer = opts.buffer or 0
 	local s = line_number - 1
@@ -121,11 +195,11 @@ end
 function M.Insert(text, opts)
 	opts = opts or {}
 	local pos = opts.pos
-	local row, col = M.GetCursorPos()
+	local row, col = M.GetCursorPos():unpack()
 	if pos then
 		row, col = pos.row, pos.col
 	end
-    print(row, col)
+	print(row, col)
 	local line = M.GetLine(row)
 	line = string.sub(line, 1, col) .. text .. string.sub(line, col + 1, -1)
 	print(line)
@@ -139,7 +213,7 @@ end
 ---@param opts.buffer integer | nil
 function M.InsertLine(text, opts)
 	opts = opts or {}
-	local row, _ = M.GetCursorPos()
+	local row, _ = M.GetCursorPos():unpack()
 	local line_number = opts.line_number or row
 	local buffer = opts.buffer or 0
 	local s = line_number - 1

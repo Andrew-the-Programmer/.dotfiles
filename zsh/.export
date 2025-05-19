@@ -27,26 +27,19 @@ function Export() {
 
 	config_dir="$HOME/.config/$package_name"
 
+    targets=(
+        "source"
+        "plugins-config"
+        "zshrc.sh"
+        ".zshrc"
+    )
+
 	mkdir -p "$config_dir"
 
-	cd .. || exit
-
-	cmd="stow"
-
-	args=(
-		"-t"
-		"$config_dir"
-		"--dotfiles"
-		"--ignore"
-		".export"
-		"$package_name"
-	)
-
-	for subpackage in "${subpackages[@]}"; do
-		args+=("--ignore $subpackage")
-	done
-
-	eval "${cmd} ${args[*]}"
+    for target in "${targets[@]}"; do
+        ln -sdf "$PWD/$target" "$config_dir/$target" ||
+            ( echo "Failed to link $target" && exit 1 )
+    done
 
 	return $?
 }

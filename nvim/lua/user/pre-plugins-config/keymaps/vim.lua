@@ -78,14 +78,8 @@ New("n", "U", "<C-r>", { desc = "Redo" })
 -- See toggleterm config
 -- map("t", "<C-{", "<esc>", { desc = "Escape terminal mode" })
 
-New("n", "<C-м>", "<C-v>", { desc = "Redo" })
+New("i", "<C-х>", "<esc>", { desc = "Enter normal mode in russian layout" })
 
-New("n", "<leader>PP", function()
-	vim.ui.input({ prompt = "input title: " }, function(input)
-		print(input)
-		-- vim.cmd("ObsidianNew " .. input)
-	end)
-	print("action")
-end)
+New({ "n", "i" }, "<C-м>", [["+P]], { desc = "Paste in russian layout" })
 
 return M

@@ -14,7 +14,7 @@ return {
 				"write_good",
 				"alex",
 				-- "markdownlint",
-				"proselint",
+				-- "proselint",
 				-- "textlint",
 			},
 			sql = { "sqlfluff" },

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function CloneThemes() {
+    git clone git@github.com:dexpota/kitty-themes.git ./themes/kitty-themes
+    git clone git@github.com:catppuccin/kitty.git ./themes/catppuccin
+}
+
 subpackages=(
 )
 
@@ -51,6 +56,7 @@ function Export() {
 }
 
 Init
+CloneThemes
 ExportSubpackages
 Export
 Exit

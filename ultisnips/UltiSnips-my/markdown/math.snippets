@@ -7,15 +7,6 @@ def math():
 endglobal
 
 context "math()"
-snippet testmath ""
-\\test_success
-endsnippet
-
-snippet test ""
-test success
-endsnippet
-
-context "math()"
 snippet eps "epsilon"
 \\epsilon$0
 endsnippet
@@ -132,27 +123,27 @@ endsnippet
 
 context "math()"
 snippet "union" "union" rw
-\cup 
+\cup
 endsnippet
 
 context "math()"
 snippet "intersection" "intersection" rw
-\cap 
+\cap
 endsnippet
 
 context "math()"
 snippet "or" "union" rw
-\lor 
+\lor
 endsnippet
 
 context "math()"
 snippet "and" "union" rw
-\land 
+\land
 endsnippet
 
 context "math()"
 snippet "not" "union" rw
-\lnot 
+\lnot
 endsnippet
 
 context "math()"
@@ -167,12 +158,12 @@ endsnippet
 
 context "math()"
 snippet -> "implies" iA
-\implies 
+\implies
 endsnippet
 
 context "math()"
 snippet <- "implied by" iA
-\impliedby 
+\impliedby
 endsnippet
 
 context "math()"
@@ -197,42 +188,42 @@ endsnippet
 
 context "math()"
 snippet <= "leq" iA
-\le 
+\le
 endsnippet
 
 context "math()"
 snippet >= "geq" iA
-\ge 
+\ge
 endsnippet
 
 context "math()"
 snippet != "neq" iA
-\neq 
+\neq
 endsnippet
 
 context "math()"
 snippet >> "gg" iA
-\gg 
+\gg
 endsnippet
 
 context "math()"
 snippet << "ll" iA
-\ll 
+\ll
 endsnippet
 
 context "math()"
 snippet d= "left def eq" iA
-\defeq 
+\defeq
 endsnippet
 
 context "math()"
 snippet := "left def eq" iA
-\ldefeq 
+\ldefeq
 endsnippet
 
 context "math()"
 snippet =: "right def eq" iA
-\rdefeq 
+\rdefeq
 endsnippet
 
 context "math()"
@@ -393,13 +384,13 @@ endsnippet
 
 context "math()"
 snippet xx "cross" iA
-\times 
+\times
 endsnippet
 
 priority 100
 context "math()"
 snippet ** "cdot" iA
-\cdot 
+\cdot
 endsnippet
 
 context "math()"
@@ -461,6 +452,11 @@ endsnippet
 context "math()"
 snippet setcue "\dot" w
 \set{{$1}^{$2}}_{$2 \in $3}$0
+endsnippet
+
+context "math()"
+snippet text "" w
+\textit{$0}
 endsnippet
 
 # ENVIRONMENTS ------------------------------
@@ -528,6 +524,13 @@ $0
 endsnippet
 
 context "math()"
+snippet matrix ""
+\\Matrix{
+$0
+}
+endsnippet
+
+context "math()"
 snippet pmatrixfi ""
 \\Pmatrix{$0}
 endsnippet
@@ -537,6 +540,25 @@ snippet alignleft ""
 \\AlignLeft{
 $0
 }
+endsnippet
+
+context "math()"
+snippet align ""
+\\Align{
+$0
+}
+endsnippet
+
+snippet alignmi ""
+\$\\Align{
+$0
+}\$
+endsnippet
+
+snippet alignmb ""
+\$\$\\Align{
+$0
+}\$\$
 endsnippet
 
 context "math()"
@@ -554,11 +576,4 @@ endsnippet
 context "math()"
 snippet aligncenteri ""
 \\AlignCenter{$0}
-endsnippet
-
-context "math()"
-snippet proof ""
-\\Proof{
-$0
-}
 endsnippet

@@ -1,5 +1,5 @@
 global !p
-def comment(): 
+def comment():
 	return False
 
 def env(name):
@@ -27,40 +27,44 @@ snippet item "ldots" i
 endsnippet
 
 snippet definition "\dfn" w
-\\Definition{$1}{
-	$0
-}
+# Definition
+
+$0
 endsnippet
+
 snippet theorem "\thm" w
-\\Theorem{$1}{
-	$0
-}
-endsnippet
-snippet lenma "\mlemma" w
-\\Lenma{$1}{
-	$0
-}
-endsnippet
-
-snippet sect "section" b
-\\section{$1}
+# Theorem
 
 $0
 endsnippet
 
-snippet ssect "section" b
-\\subsection{$1}
+snippet lemma "\mlemma" w
+# Lemma
 
 $0
 endsnippet
 
-snippet let "" b
-\`Пусть:\`
+snippet claim "" w
+# Claim
+
+$0
+endsnippet
+
+snippet if "" b
+## If:
+
 $0
 endsnippet
 
 snippet then "" b
-\`Тогда:\`
+## Then:
+
+$0
+endsnippet
+
+snippet proof "" b
+## Proof:
+
 $0
 endsnippet
 

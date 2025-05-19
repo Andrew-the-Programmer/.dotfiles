@@ -132,6 +132,9 @@ function M.Copy(t)
 	return setmetatable(u, getmetatable(t))
 end
 
+---@param inputstr string
+---@param sep string
+---@return table
 function M.Split(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
@@ -141,6 +144,16 @@ function M.Split(inputstr, sep)
 		table.insert(t, str)
 	end
 	return t
+end
+
+---@param str string
+---@param new_substring string
+---@param si integer
+---@param ei integer
+function M.Substitute(str, new_substring, si, ei)
+	local prefix = str:sub(1, si - 1)
+	local suffix = str:sub(ei + 1)
+	return prefix .. new_substring .. suffix
 end
 
 return M

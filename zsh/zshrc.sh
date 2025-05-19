@@ -16,7 +16,7 @@ plugins=(
 # More completions https://github.com/zsh-users/zsh-completions
 
 completions=(
-    "esc/conda-zsh-completion"
+    # "esc/conda-zsh-completion"
 )
 
 # -----------------------------------------------------------------------------

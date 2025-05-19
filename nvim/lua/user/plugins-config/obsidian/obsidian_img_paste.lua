@@ -13,6 +13,11 @@ function M.get_clip_check_command()
 	local this_os = util.get_os()
 	if this_os == util.OSType.Linux or this_os == util.OSType.FreeBSD then
 		local display_server = os.getenv("XDG_SESSION_TYPE")
+
+        -- for arch: I use x11. rn I guess gnome uses wayland, but I want xclip
+        -- to work. I'm not yet sure how to set this in a more professional way :/
+        display_server = "x11"
+
 		if display_server == "x11" or display_server == "tty" then
 			check_cmd = "xclip -selection clipboard -o -t TARGETS"
 		elseif display_server == "wayland" then

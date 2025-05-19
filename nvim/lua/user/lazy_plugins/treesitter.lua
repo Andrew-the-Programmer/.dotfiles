@@ -21,7 +21,8 @@ return {
 				"json",
 				"vim",
 				"markdown",
-                "sql",
+				"sql",
+				"python",
 			},
 
 			sync_install = false,
@@ -41,7 +42,7 @@ return {
 				-- additional_vim_regex_highlighting = { "latex" },
 			},
 		})
-        -- vim.opt.additional_vim_regex_highlighting = true
+		-- vim.opt.additional_vim_regex_highlighting = true
 		vim.keymap.set("n", "<localleader>s", function()
 			-- vim.cmd('eval \'join(map(synstack(line("."), col(".")), synIDattr(v:val, "name")), " > ")\'')
 			vim.cmd([[

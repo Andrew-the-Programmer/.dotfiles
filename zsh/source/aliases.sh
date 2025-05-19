@@ -114,3 +114,59 @@ function randfile() {
 function copy_image() {
     xclip -selection clipboard -target image/png -i < "$1"
 }
+
+function archi() {
+    yay -Sy --noconfirm "$@"
+}
+
+function py_check_module() {
+    python3 -c "import $1" 2> /dev/null || return 1
+    return 0
+}
+
+function pyi() {
+    module=$1
+    pymodule=$2
+
+    if [ -z "$pymodule" ]; then
+        pymodule=$module
+    fi
+
+    if py_check_module "$pymodule"; then
+        echo "$module is already installed"
+        return 0
+    fi
+
+    sudo pacman -Sy --noconfirm "python-$module"
+
+    if py_check_module "$pymodule"; then
+        echo "$module installed with pacman"
+        return 0
+    fi
+
+    pipx install --include-deps "$module"
+
+    if py_check_module "$pymodule"; then
+        echo "$module installed with pipx"
+        return 0
+    fi
+
+    pip install --user "$module"
+
+    if py_check_module "$pymodule"; then
+        echo "$module installed with pip"
+        return 0
+    fi
+
+    # https://stackoverflow.com/questions/76499565/python-does-not-find-module-installed-with-pipx
+    pip install --user --break-system-packages "$module"
+    # "$HOME/.venvs/MyEnv/bin/python" -m pip install --user "$module"
+
+    if py_check_module "$pymodule"; then
+        echo "$module installed with pip --break-system-packages"
+        return 0
+    else
+        echo "$module not installed"
+        return 1
+    fi
+}

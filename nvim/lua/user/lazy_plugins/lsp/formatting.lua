@@ -23,6 +23,7 @@ return {
 				},
 				cmake = { "cmake_format" },
 				sql = { "sqlfluff" },
+				tex = { "latexindent" },
 				["*"] = {
 					-- "codespell",
 					"typos",

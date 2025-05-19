@@ -56,7 +56,7 @@ function M.ImageEdit(fig_path)
     if ext == ".svg" then
         local cmd = M.GetImgCmd_edit(fig_path.filename)
         My.nvim.SilentExecCmdInBackground(cmd)
-    elseif ext == ".png" then
+    elseif ext == ".png" or ext == ".jpg" then
         local cmd = "pinta " .. fig_path.filename
         My.nvim.SilentExecCmdInBackground(cmd)
     end

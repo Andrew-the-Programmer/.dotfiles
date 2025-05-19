@@ -69,4 +69,15 @@ return {
 		end,
 		opts = { buffer = true, desc = "Add numbered list" },
 	},
+	["<localleader>ma"] = {
+		action = function()
+            local line = My.nvim.GetLine()
+            if not line:match("^#.*") then
+                My.nvim.PrependText("# ")
+                return
+            end
+            My.nvim.PrependText("#")
+		end,
+		opts = { buffer = true, desc = "Add numbered list" },
+	}
 }

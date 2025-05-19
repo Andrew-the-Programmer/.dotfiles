@@ -80,10 +80,10 @@ return {
 					{
 						name = "ultisnips",
 					},
+                    {
+                        name = "nvim_lsp",
+                    },
 				}, {
-					{
-						name = "nvim_lsp",
-					},
 					{
 						name = "vim-dadbod-completion",
 					},

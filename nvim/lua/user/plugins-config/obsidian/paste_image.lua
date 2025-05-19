@@ -25,6 +25,7 @@ function M.UniqueFigName(fig_name)
 end
 
 function M.Copy(src, dst)
+	Path.new(dst):parent():mkdir({ exist_ok = true, parents = true })
 	local cmd = ('cp "%s" "%s"'):format(src, dst)
 	local suc = os.execute(cmd)
 	if type(suc) == "number" and suc ~= 0 then
@@ -67,7 +68,9 @@ function M.PasteImage(fig_name)
 	end
 
 	if oip.clipboard_is_img() then
-		local tmp_file = Path.new(("/tmp/nvim_obsidian/%s.png"):format(M.UniqueFigName(fig_name)))
+		print("image found in clipboard")
+		fig_name = M.UniqueFigName(fig_name)
+		local tmp_file = Path.new(("/tmp/nvim_obsidian/%s.png"):format(fig_name))
 		tmp_file:parent():mkdir({ exist_ok = true, parents = true })
 		local cmd = ('xclip -selection clipboard -target image/png -o > "%s"'):format(tmp_file.filename)
 		local suc = os.execute(cmd)
@@ -77,6 +80,7 @@ function M.PasteImage(fig_name)
 		M.SaveImg({ path = tmp_file, fname = fig_name })
 		return
 	end
+	print("image NOT found in clipboard")
 
 	local clipboard = vim.fn.getreg("+")
 	local path_list = My.lua.Split(clipboard, "\n")
