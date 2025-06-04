@@ -1,7 +1,6 @@
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
+return My.FiletypeConfig:new({
 	pattern = "*",
 	callback = function(ev)
-		-- my_opt = "any"
 		-- tabs & indentation
 		vim.opt.tabstop = 4
 		vim.opt.shiftwidth = 4
@@ -10,5 +9,3 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		vim.opt.wrap = false
 	end,
 })
-
--- My.Notify("Default settings loaded")

@@ -24,6 +24,7 @@ return {
 				cmake = { "cmake_format" },
 				sql = { "sqlfluff" },
 				tex = { "latexindent" },
+				css = { "css_beautify" },
 				["*"] = {
 					-- "codespell",
 					"typos",

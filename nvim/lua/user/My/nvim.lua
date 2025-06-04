@@ -66,16 +66,32 @@ function M.GetCursorPos()
 	return M.Pos:new(row, col)
 end
 
+--- @param expr string see vim.fn.getpos
+---@return Pos
+function M.GetPos(expr)
+	local _, row, col = unpack(vim.fn.getpos(expr))
+	return M.Pos:new(row, col)
+end
+
 ---@return Pos, Pos
 function M.GetVisualSelection()
-	local _, srow, scol = unpack(vim.fn.getpos("v"))
-	local _, erow, ecol = unpack(vim.fn.getpos("."))
-	local s, e = M.Pos:new(srow, scol), M.Pos:new(erow, ecol)
-	if srow > erow or (srow == erow and scol > ecol) then
+	local s, e = M.GetPos("v"), M.GetPos(".")
+	if s.row > e.row or (s.row == e.row and s.col > e.col) then
 		s, e = e, s
 	end
 	if vim.fn.mode() == "V" then
 		return M.Pos:new(s.row, 1), M.Pos:new(e.row, M.GetLine(e.row):len())
+	end
+	-- For Chinese symbols (idk)
+	local function CharIsStrange(char)
+		if string.len(char) == 0 then
+			return true
+		end
+		local byte = string.byte(char)
+		return 0xe0 <= byte and byte <= 0xef
+	end
+	if CharIsStrange(M.GetChar(e)) then
+		e.col = e.col + 2
 	end
 	return s, e
 end
@@ -170,10 +186,17 @@ end
 
 ---@param from Pos
 ---@param to Pos
+---@return string
 function M.GetText(from, to)
 	local buffer = 0
 	local lines = vim.api.nvim_buf_get_text(buffer, from.row - 1, from.col - 1, to.row - 1, to.col, {})
 	return table.concat(lines, "\n")
+end
+
+---@param pos Pos
+---@return string
+function M.GetChar(pos)
+	return M.GetText(pos, pos)
 end
 
 ---@param text string

@@ -120,22 +120,22 @@ endsnippet
 
 context "math()"
 snippet "un " "union" rwA
-\cup 
+\cup
 endsnippet
 
 context "math()"
 snippet "ins " "intersection" rwA
-\cap 
+\cap
 endsnippet
 
 context "math()"
 snippet "or " "union" rwA
-\lor 
+\lor
 endsnippet
 
 context "math()"
 snippet "not " "union" rwA
-\lnot 
+\lnot
 endsnippet
 
 context "math()"
@@ -150,17 +150,17 @@ endsnippet
 
 context "math()"
 snippet "and " "union" rwA
-\land 
+\land
 endsnippet
 
 context "math()"
 snippet -> "implies" iA
-\implies 
+\implies
 endsnippet
 
 context "math()"
 snippet <- "implied by" iA
-\impliedby 
+\impliedby
 endsnippet
 
 context "math()"
@@ -185,115 +185,163 @@ endsnippet
 
 context "math()"
 snippet <= "leq" iA
-\le 
+\le
 endsnippet
 
 context "math()"
 snippet >= "geq" iA
-\ge 
+\ge
 endsnippet
 
 context "math()"
 snippet != "neq" iA
-\neq 
+\neq
 endsnippet
 
 context "math()"
 snippet >> "gg" iA
-\gg 
+\gg
 endsnippet
 
 context "math()"
 snippet << "ll" iA
-\ll 
+\ll
 endsnippet
 
 context "math()"
 snippet d= "left def eq" iA
-\defeq 
+\defeq
 endsnippet
 
 context "math()"
 snippet := "left def eq" iA
-\ldefeq 
+\ldefeq
 endsnippet
 
 context "math()"
 snippet =: "right def eq" iA
-\rdefeq 
+\rdefeq
 endsnippet
 
-priority -100
 context "math()"
-snippet "(\\?[A-Za-z0-9]+\..+)+(/)" "auto subscript 1" wrA
+snippet "(\\?[A-Za-z0-9]+\..+)+(/)" "" wrA
 `!p
-from string import digits
+from typing import Literal
+
+operations_history: list[str] = []
+
 
 def ParseArgs(args: str) -> list[str]:
-	return args.split(',')
+    return args.split(",")
 
-def IndexD(prefix: str, index: str) -> str:
-	return f"{{{prefix}}}_{{{index}}}"
 
 def Perp(prefix: str, args: str = None) -> str:
     return IndexD(prefix, r"\perp")
 
+
 def Parallel(prefix: str, args: str = None) -> str:
     return IndexD(prefix, r"\parallel")
 
+
+def Index(
+    operation: Literal["_", "^"],
+    prefix: str,
+    index: str,
+    isolate_prefix: bool = None,
+    isolate_index: bool = None,
+) -> str:
+    def Isolate(s: str) -> str:
+        return "{" + s + "}"
+
+    if isolate_prefix is not None and isolate_index is not None:
+        if isolate_prefix:
+            prefix = Isolate(prefix)
+        if isolate_index:
+            index = Isolate(index)
+        return f"{prefix}{operation}{index}"
+    if isolate_prefix is None:
+        if len(prefix) == 1:
+            isolate_prefix = False
+        else:
+            opposite_operation = "_" if operation == "^" else "^"
+            prev_operation = (
+                operations_history[-2] if len(operations_history) > 1 else None
+            )
+            if prev_operation == opposite_operation:
+                isolate_prefix = False
+            else:
+                isolate_prefix = True
+    if isolate_index is None:
+        if len(index) == 1:
+            isolate_index = False
+        else:
+            isolate_index = True
+    return Index(operation, prefix, index, isolate_prefix, isolate_index)
+
+
+def IndexD(prefix: str, index: str) -> str:
+    return Index("_", prefix, index)
+
+
 def IndexU(prefix: str, index: str) -> str:
-	return f"{{{prefix}}}^{{{index}}}"
+    return Index("^", prefix, index)
+
 
 def Stroke(prefix: str, args: str = None) -> str:
-	n = 1
-	if len(args) == 1:
-		n = int(args)
+    n = 1
+    if len(args) == 1:
+        n = int(args)
     return IndexU(prefix, "'" * n)
 
+
 def addFunc(prefix: str, func: str) -> str:
-	return f"\\{func}{{{prefix}}}"
+    return f"\\{func}{{{prefix}}}"
+
 
 def Vec(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, "vec")
+    return addFunc(prefix, "vec")
+
 
 def Dot(prefix: str, args: str = None) -> str:
-	n = 1
-	if len(args) == 1:
-		n = int(args)
-	return addFunc(prefix, "d" * n + "ot")
+    n = 1
+    if len(args) == 1:
+        n = int(args)
+    return addFunc(prefix, "d" * n + "ot")
+
 
 def Overline(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, "overline")
+    return addFunc(prefix, "overline")
+
 
 def Underline(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, "underline")
+    return addFunc(prefix, "underline")
+
 
 def Abs(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, "abs")
+    return addFunc(prefix, "abs")
+
 
 def Dv(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, f"Dv{{{args}}}")
+    return addFunc(prefix, f"Dv{{{args}}}")
+
 
 def dv(prefix: str, args: str = None) -> str:
-	return addFunc(prefix, f"dv{{{args}}}")
+    return addFunc(prefix, f"dv{{{args}}}")
 
-def ParseCommand(cmd: str) -> tuple[str, str]:
-    command = cmd[0]
-    args = cmd[1:]
-	return command, args
 
 def SimpleDv(prefix: str, args: str = None) -> str:
-	return IndexU(prefix, f"({args})")
+    return IndexU(prefix, f"({args})")
+
 
 getFunc: dict[str] = {
-	"^": IndexU,
-	"_": IndexD,
-	"v": Vec,
-	"d": dv,
-	"D": Dv,
-	"o": Overline,
-	"u": Underline,
-	"a": Abs,
+    "^": IndexU,
+    "_": IndexD,
+    "v": Vec,
+    "d": dv,
+    "D": Dv,
+    "o": Overline,
+    "u": Underline,
+    "a": Abs,
     "p": Perp,
     "P": Parallel,
     "s": Stroke,
@@ -301,40 +349,78 @@ getFunc: dict[str] = {
     "T": SimpleDv,
 }
 
-def FindFunc(name: str):
-	return getFunc[name]
 
-def Command(prefix: str, command: str):
-	c_name, c_args = ParseCommand(command)
-	s = getFunc[c_name](prefix, c_args)
-	return s
+def ParseCommand(cmd: str) -> tuple:
+    command = cmd[0]
+    args = cmd[1:]
+    operations_history.append(command)
+    return getFunc[command], args
 
-input = match[1]
-sep = match[2]
 
-MATCH = r"(\\?[a-zA-Z]*)(\..*)+"
-m = re.match(MATCH, input)
-prefix = m[1]
-commands = m[2]
-list_commands = commands.split(".")[1:]
+def ExecCommand(prefix: str, command: str):
+    func, args = ParseCommand(command)
+    s = func(prefix, args)
+    return s
 
-for c in list_commands:
-	prefix = Command(prefix, c)
 
-# prefix += sep
-snip.rv = prefix
+def main() -> str:
+    INPUT = match[1]
+    MATCH = r"(\\?[A-Za-z0-9]+)(\..*)+"
+    m = re.match(MATCH, INPUT)
+    prefix = m[1]
+    commands = m[2]
+    list_commands = commands.split(".")[1:]
+
+    for c in list_commands:
+        prefix = ExecCommand(prefix, c)
+
+    return prefix
+
+
+snip.rv = main()
 `
 endsnippet
 
 context "math()"
+snippet // "Fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+snippet / "Fraction" i
+\\frac{${VISUAL}}{$1}$0
+endsnippet
+
+priority -1000
+context "math()"
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "symbol frac" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+
+priority -1000
+context "math()"
+snippet '^.*\)/' "() frac" wrA
+`!p
+stripped = match.string[:-1]
+depth = 0
+i = len(stripped) - 1
+while True:
+	if stripped[i] == ')': depth += 1
+	if stripped[i] == '(': depth -= 1
+	if depth == 0: break;
+	i-=1
+snip.rv = stripped[0:i] + "\\frac{" + stripped[i+1:-1] + "}"
+`{$1}$0
+endsnippet
+
+context "math()"
 snippet xx "cross" iA
-\times 
+\times
 endsnippet
 
 priority 100
 context "math()"
 snippet ** "cdot" iA
-\cdot 
+\cdot
 endsnippet
 
 context "math()"
@@ -362,39 +448,3 @@ context "math()"
 snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp) ' "math functions" rwA
 \\`!p snip.rv = match.group(1)`{$0}
 endsnippet
-
-context "math()"
-snippet set "\dot" w
-\\left\\{$1\\right\\}$0
-endsnippet
-
-context "math()"
-snippet setld "\dot" w
-\set{{$1}_{$2}, \ldots, {$1}_{$3}}$0
-endsnippet
-
-context "math()"
-snippet setlu "\dot" w
-\set{{$1}^{$2}, \ldots, {$1}^{$3}}$0
-endsnippet
-
-context "math()"
-snippet setcd "\dot" w
-\set{{$1}_{$2}}$0
-endsnippet
-
-context "math()"
-snippet setcu "\dot" w
-\set{{$1}^{$2}}$0
-endsnippet
-
-context "math()"
-snippet setcde "\dot" w
-\set{{$1}_{$2}}_{$2 \in $3}$0
-endsnippet
-
-context "math()"
-snippet setcue "\dot" w
-\set{{$1}^{$2}}_{$2 \in $3}$0
-endsnippet
-

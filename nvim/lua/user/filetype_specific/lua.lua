@@ -1,5 +1,7 @@
--- tabs & indentation
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-
-My.opts.format_on_save = false
+return My.FiletypeConfig:new({
+	pattern = "*.lua",
+	callback = function(ev)
+		vim.opt.tabstop = 4
+		vim.opt.shiftwidth = 4
+	end,
+})

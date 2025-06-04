@@ -1,10 +1,9 @@
-local utils = require("map_utils")
-local lua_fn = utils.lua_fn
+local Keymap = My.keymaps.Keymap
 
-local opts = {}
-
+---@type Keymap[]
 local keymaps = {
-	["<localleader>me"] = {
+	Keymap:new({
+		lhs = "<localleader>me",
 		mode = "n",
 		rhs = function()
 			local n = vim.fn.input("Number of lines: ")
@@ -15,8 +14,9 @@ local keymaps = {
 			end
 		end,
 		opts = { desc = "Enumerate" },
-	},
-	["<localleader>mi"] = {
+	}),
+	Keymap:new({
+		lhs = "<localleader>mi",
 		mode = "n",
 		rhs = function()
 			local n = vim.fn.input("Number of lines: ")
@@ -27,8 +27,9 @@ local keymaps = {
 			end
 		end,
 		opts = { desc = "Itemize" },
-	},
-	["<localleader>mh"] = {
+	}),
+	Keymap:new({
+		lhs = "<localleader>mh",
 		mode = "n",
 		rhs = function()
 			local line = My.nvim.GetLine()
@@ -39,21 +40,9 @@ local keymaps = {
 			My.nvim.PrependText("#")
 		end,
 		opts = { desc = "Header" },
-	},
-	["<localleader>ma"] = {
-		mode = "v",
-		rhs = function()
-			local visual_selection = My.nvim.get_visual_selection_text()
-			if not visual_selection then
-				return
-			end
-			local vs_text = table.concat(visual_selection, "\n")
-			My.nvim.SubstituteVisualSelection(([[<abbr title=>%s</abbr>]]):format(vs_text))
-			My.nvim.EnterNormalMode()
-		end,
-		opts = { desc = "Abbreviation" },
-	},
-	["<localleader>mu"] = {
+	}),
+	Keymap:new({
+		lhs = "<localleader>mu",
 		mode = "v",
 		rhs = function()
 			local visual_selection = My.nvim.get_visual_selection_text()
@@ -65,19 +54,48 @@ local keymaps = {
 			My.nvim.EnterNormalMode()
 		end,
 		opts = { desc = "Abbreviation" },
-	},
+	}),
+	Keymap:new({
+		lhs = "<localleader>ms",
+		mode = "v",
+		rhs = function()
+			local from, to = My.nvim.GetVisualSelection()
+			local text = My.nvim.GetText(from, to)
+			vim.ui.input({ prompt = "Tag and args: " }, function(input)
+				local tag, args = string.match(input, "([a-z]+)(.*)")
+				args = My.lua.IfNil(args, "")
+				local prefix = ("<%s%s>"):format(tag, args)
+				local suffix = ("</%s>"):format(tag)
+				local new_text = prefix .. text .. suffix
+				My.nvim.SubstituteText(new_text, from, to)
+			end)
+		end,
+		opts = { desc = "Surround" },
+	}),
+	Keymap:new({
+		lhs = "<localleader>ma",
+		mode = "v",
+		rhs = function()
+			local from, to = My.nvim.GetVisualSelection()
+			local text = My.nvim.GetText(from, to)
+			vim.ui.input({ prompt = "Title: " }, function(input)
+				local tag = "abbr"
+				local title = input
+				title = My.lua.IfNil(title, "")
+				local prefix = ("<%s title='%s'>"):format(tag, title)
+				local suffix = ("</%s>"):format(tag)
+				local new_text = prefix .. text .. suffix
+				My.nvim.SubstituteText(new_text, from, to)
+			end)
+		end,
+		opts = { desc = "Abbreviation" },
+	}),
 }
 
-vim.api.nvim_create_autocmd("BufEnter", {
+return My.FiletypeConfig:new({
 	pattern = "*.md",
+	keymaps = keymaps,
 	callback = function(ev)
 		vim.opt.wrap = true
-
-		for k, v in pairs(opts) do
-			vim.api.nvim_buf_set_var(ev.buf, k, v)
-		end
-		for k, v in pairs(keymaps) do
-			vim.api.nvim_buf_set_keymap(ev.buf, v.mode, k, lua_fn(v.rhs), v.opts)
-		end
 	end,
 })

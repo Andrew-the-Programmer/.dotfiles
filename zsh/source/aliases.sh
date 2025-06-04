@@ -84,7 +84,9 @@ alias touch="touch_with_mkdir"
 alias fzfd="find . -type d -print | fzf"
 alias zf="cd \$(fzfd)"
 
-alias bat="batcat"
+# on arch already installed as /usr/bin/bat
+# alias bat="batcat"
+
 alias fzfp="fzf --preview \"bat --color=always --style=numbers --line-range=:500 {}\""
 
 function ocrpdf() {

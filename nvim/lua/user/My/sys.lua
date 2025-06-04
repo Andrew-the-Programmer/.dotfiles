@@ -58,6 +58,4 @@ function M.FileExt(file)
 	return vim.fn.fnamemodify(file, ":e")
 end
 
-
-
 return M

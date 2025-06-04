@@ -1,13 +1,15 @@
+local Keymap = My.keymaps.Keymap
+
+---@type Keymap[]
 local M = {}
 
 local function New(mode, lhs, rhs, opts)
-	local new = My.Keymap:new()
-	new.mode = mode
-	new.lhs = lhs
-	new.rhs = rhs
-	new.opts = opts
-	-- new:Add()
-	-- vim.keymap.set(mode, lhs, rhs, opts)
+	local new = Keymap:new({
+		mode = mode,
+		lhs = lhs,
+		rhs = rhs,
+		opts = opts,
+	})
 	table.insert(M, new)
 end
 
