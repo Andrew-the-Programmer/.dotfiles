@@ -8,7 +8,4 @@ return {
 		"nvim-lua/plenary.nvim",
 		"preservim/vim-markdown",
 	},
-	config = function()
-		require("user.plugins-config.obsidian")
-	end,
 }

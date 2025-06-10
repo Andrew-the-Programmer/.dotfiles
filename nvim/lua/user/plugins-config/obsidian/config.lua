@@ -1,4 +1,5 @@
 local obsidian = require("obsidian")
+local Path = require("obsidian.path")
 
 vim.g.vim_markdown_math = 1
 vim.opt.conceallevel = 2
@@ -26,22 +27,33 @@ end
 
 local mappings = require("user.plugins-config.obsidian.keymaps")
 
+local workspaces = {
+	{
+		name = "mipt_notes",
+		path = "~/my/mipt/mipt_notes",
+		overrides = {
+			notes_subdir = "notes",
+		},
+	},
+	{
+		name = "mipt_chinese",
+		path = "~/my/mipt/mipt_chinese",
+	},
+}
+
+local real_workspaces = {}
+
+for _, workspace in pairs(workspaces) do
+	local path = Path.new(workspace.path)
+	if path:exists() then
+		table.insert(real_workspaces, workspace)
+	end
+end
+
 local opts = {
 	-- would be cool if it frontmattered new nodes
 	disable_frontmatter = false,
-	workspaces = {
-		{
-			name = "mipt_notes",
-			path = "~/my/mipt/mipt_notes",
-			overrides = {
-				notes_subdir = "notes",
-			},
-		},
-		{
-			name = "mipt_chinese",
-			path = "~/my/mipt/mipt_chinese",
-		},
-	},
+	workspaces = real_workspaces,
 	-- notes_subdir = "notes",
 	completion = {
 		nvim_cmp = true,
