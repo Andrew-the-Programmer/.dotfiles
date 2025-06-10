@@ -1,5 +1,9 @@
 # zsh completion. src: https://thevaluable.dev/zsh-completion-guide-examples/
+
+autoload -Uz compinit && compinit
+
 autoload -U compinit; compinit
+
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"

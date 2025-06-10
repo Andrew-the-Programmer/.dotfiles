@@ -2,7 +2,7 @@ local mt = My.translation
 local Keymap = My.keymaps.Keymap
 
 ---@type Keymap[]
-local M = {}
+local keymaps = {}
 
 local function New(mode, lhs, rhs, opts)
 	local new = Keymap:new({
@@ -11,7 +11,7 @@ local function New(mode, lhs, rhs, opts)
 		rhs = rhs,
 		opts = opts,
 	})
-	table.insert(M, new)
+	table.insert(keymaps, new)
 end
 
 New({ "n", "v" }, "<localleader>cp", function()
@@ -100,4 +100,7 @@ New({ "n", "v" }, "<localleader>tC", function()
 	My.nvim.EnterNormalMode()
 end, { desc = "Insert translation to chinese" })
 
-return M
+return My.FiletypeConfig:new({
+	pattern = { "*.txt", "*.md" },
+	keymaps = keymaps,
+})
