@@ -121,6 +121,24 @@ function archi() {
     yay -Sy --noconfirm "$@"
 }
 
+function debian_install() {
+    sudo apt install -y "$@"
+}
+
+function sysi() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$NAME
+    fi
+    if [ "$OS" = "Arch Linux" ]; then
+        archi "$@"
+    elif [ "$OS" = "Ubuntu" ]; then
+        debian_install "$@"
+    else
+        echo "Not supported for your OS"
+    fi
+}
+
 function py_check_module() {
     python3 -c "import $1" 2> /dev/null || return 1
     return 0
