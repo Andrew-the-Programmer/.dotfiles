@@ -84,8 +84,9 @@ alias touch="touch_with_mkdir"
 alias fzfd="find . -type d -print | fzf"
 alias zf="cd \$(fzfd)"
 
-# on arch already installed as /usr/bin/bat
-# alias bat="batcat"
+if ! which bat > /dev/null; then
+    alias bat="batcat"
+fi
 
 alias fzfp="fzf --preview \"bat --color=always --style=numbers --line-range=:500 {}\""
 
@@ -189,4 +190,11 @@ function pyi() {
         echo "$module not installed"
         return 1
     fi
+}
+
+function clip-in() {
+    xclip -selection clipboard
+}
+function clip-out() {
+    xclip -selection clipboard -o
 }

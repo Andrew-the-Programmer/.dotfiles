@@ -25,8 +25,8 @@ local opts = {
 		end,
 		sort = {
 			{ "type", "asc" },
-			{ "mtime", "desc" },
 			{ "name", "asc" },
+			{ "mtime", "desc" },
 		},
 	},
 }
