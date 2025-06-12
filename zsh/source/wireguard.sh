@@ -3,10 +3,10 @@ wg_dir="/etc/wireguard"
 pubkey_file="$wg_dir/publickey"
 prvkey_file="$wg_dir/privatekey"
 
-function wg_get_privatekey() {
+function wg-get-privatekey() {
     sudo cat "$prvkey_file"
 }
-function wg_get_publickey() {
+function wg-get-publickey() {
     sudo cat "$pubkey_file"
 }
 
@@ -14,22 +14,25 @@ wg_connection="wg0"
 eth_connection=$(ip route | awk '/default/ {print $5}' | head -n 1)
 wg_config_file="$wg_dir/$wg_connection.conf"
 
-function wg_read_config() {
-    sudo bat "$wg_config_file"
+function wg-get-config-file() {
+    print "$wg_dir/$wg_connection.conf"
 }
-function wg_edit_config() {
-    sudo nvim "$wg_config_file"
+function wg-read-config() {
+    sudo bat "$(wg-get-config-file)"
+}
+function wg-edit-config() {
+    sudo nvim "$(wg-get-config-file)"
 }
 
 function wg_m() {
     sudo systemctl "$1" "wg-quick@$wg_connection"
 }
-function wg_start() {
+function wg-start() {
     wg_m start
 }
-function wg_stop() {
+function wg-stop() {
     wg_m stop
 }
-function wg_restart() {
+function wg-restart() {
     wg_m restart
 }
