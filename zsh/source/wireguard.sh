@@ -10,7 +10,6 @@ function wg-get-publickey() {
     sudo cat "$pubkey_file"
 }
 
-wg_connection=""
 eth_connection=$(ip route | awk '/default/ {print $5}' | head -n 1)
 wg_config_file="$wg_dir/$wg_connection.conf"
 
@@ -18,30 +17,39 @@ function wg-select-connection() {
     connections=$(sudo find "$wg_dir" -maxdepth 1 -type f -name "*.conf" -printf "%f\n" | sed 's/\.conf$//')
     wg_connection=$(
         print "$connections" |
-            fzf --preview "sudo bat --style=numbers --color=always --line-range :500 $wg_dir/{}.conf" --prompt="Select wg connection: "
+            fzf --preview "sudo bat --style=numbers --color=always $wg_dir/{}.conf" --prompt="Select wg connection: "
     )
+    # echo "Selected connection: $wg_connection"  # Debug
 }
 
-function wg-get-connection() {
+function wg-set-connection() {
     if [ -z "$wg_connection" ]; then
         wg-select-connection
     fi
-    print "$wg_connection"
 }
 
-function wg-get-config-file() {
-    print "$wg_dir/$(wg-get-connection).conf"
+function wg-get-connection() {
+    wg-set-connection
+    echo "$wg_connection"
+}
+
+function wg-set-config-file() {
+    wg-set-connection
+    wg_config_file="$wg_dir/$wg_connection.conf"
 }
 
 function wg-read-config() {
-    sudo bat "$(wg-get-config-file)"
+    wg-set-config-file
+    sudo bat "$wg_config_file"
 }
 function wg-edit-config() {
-    sudo nvim "$(wg-get-config-file)"
+    wg-set-config-file
+    sudo nvim "$wg_config_file"
 }
 
 function wg_m() {
-    sudo systemctl "$1" "wg-quick@$(wg-get-connection)"
+    wg-set-connection
+    sudo systemctl "$1" "wg-quick@$wg_connection"
 }
 function wg-start() {
     wg_m start
