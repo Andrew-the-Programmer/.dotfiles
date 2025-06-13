@@ -39,6 +39,10 @@ local workspaces = {
 		name = "mipt_chinese",
 		path = "~/my/mipt/mipt_chinese",
 	},
+	{
+		name = "In case no workspaces exists",
+		path = "/",
+	},
 }
 
 local real_workspaces = {}
