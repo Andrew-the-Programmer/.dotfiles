@@ -27,37 +27,18 @@ end
 
 local mappings = require("user.plugins-config.obsidian.keymaps")
 
-local workspaces = {
-	{
-		name = "mipt_notes",
-		path = "~/my/mipt/mipt_notes",
-		overrides = {
-			notes_subdir = "notes",
-		},
-	},
-	{
-		name = "mipt_chinese",
-		path = "~/my/mipt/mipt_chinese",
-	},
-	{
+local status, workspaces = pcall(require, "user.plugins-config.obsidian.workspaces")
+if not status then
+	workspaces = {
 		name = "In case no workspaces exists",
-		path = "/",
-	},
-}
-
-local real_workspaces = {}
-
-for _, workspace in pairs(workspaces) do
-	local path = Path.new(workspace.path)
-	if path:exists() then
-		table.insert(real_workspaces, workspace)
-	end
+		path = "/dev/null",
+	}
 end
 
 local opts = {
 	-- would be cool if it frontmattered new nodes
 	disable_frontmatter = false,
-	workspaces = real_workspaces,
+	workspaces = workspaces,
 	-- notes_subdir = "notes",
 	completion = {
 		nvim_cmp = true,

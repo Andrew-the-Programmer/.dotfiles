@@ -9,6 +9,7 @@ return {
 	},
 	config = function()
 		require("chatgpt").setup({
+			-- api_key_cmd = "pass show openai/chatgpt.nvim",
 			api_key_cmd = "pass show openai/chatgpt.nvim",
 		})
 	end,

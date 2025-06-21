@@ -8,40 +8,39 @@ return {
 	config = function()
 		require("nvim-treesitter.configs").setup({
 			-- A list of parser names, or "all"
-			ignore_install = { "latex" },
-			-- ensure_installed = {
-			-- 	"c",
-			-- 	"cpp",
-			-- 	"javascript",
-			-- 	"typescript",
-			-- 	"lua",
-			-- 	"rust",
-			-- 	"bash",
-			-- 	"latex",
-			-- 	"json",
-			-- 	"vim",
-			-- 	"markdown",
-			-- 	"sql",
-			-- 	"python",
-			-- },
+			-- ignore_install = { "latex" },
+			ensure_installed = {
+				"c",
+				"cpp",
+				"javascript",
+				"typescript",
+				"lua",
+				"rust",
+				"bash",
+				"latex",
+				"json",
+				"vim",
+				"markdown",
+				"sql",
+				"python",
+				"latex",
+			},
 
-			sync_install = false,
+			sync_install = true,
 			auto_install = true,
 
 			indent = {
 				enable = true,
-				disable = { "latex" },
+				-- disable = { "latex" },
 			},
 
 			highlight = {
 				enable = true,
-				disable = { "latex" },
 				-- Ultisnips stop working in markdown
 				-- disable = { "latex" },
 				additional_vim_regex_highlighting = { "latex", "markdown" },
 				-- additional_vim_regex_highlighting = { "latex" },
 			},
 		})
-		-- vim.opt.additional_vim_regex_highlighting = true
 	end,
 }

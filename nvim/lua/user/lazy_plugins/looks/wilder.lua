@@ -1,7 +1,7 @@
 return {
 	-- https://github.com/gelguy/wilder.nvim
-    -- Better cmd prompt
-    -- I have almost no idea how this config works, but it does look nice
+	-- Better cmd prompt
+	-- I have almost no idea how this config works, but it does look nice
 	"gelguy/wilder.nvim",
 	dependencies = {
 		"romgrk/fzy-lua-native",
@@ -21,9 +21,9 @@ return {
 				wilder.python_file_finder_pipeline({
 					file_command = function(ctx, arg)
 						if string.find(arg, ".") ~= nil then
-							return { "fdfind", "-tf", "-H" }
+							return { "fd", "-tf", "-H" }
 						else
-							return { "fdfind", "-tf" }
+							return { "fd", "-tf" }
 						end
 					end,
 					dir_command = { "fd", "-td" },
@@ -79,7 +79,7 @@ return {
 			max_height = "25%",
 			border = "rounded",
 			prompt_position = "top",
-            -- Transparent background (0 is none)
+			-- Transparent background (0 is none)
 			pumblend = 10,
 			empty_message = wilder.popupmenu_empty_message_with_spinner(),
 			highlighter = highlighters,

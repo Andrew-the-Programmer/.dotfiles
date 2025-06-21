@@ -4,7 +4,7 @@ return {
 		local link_visitor = require("link-visitor")
 		link_visitor.setup()
 
-		vim.keymap.set("n", "gx", link_visitor.link_under_cursor, { desc = "Visit nearest linend" })
+		-- vim.keymap.set("n", "gx", link_visitor.link_under_cursor, { desc = "Visit nearest linend" })
 
 		-- Integration with coc.nvim
 		vim.api.nvim_create_autocmd("User", {

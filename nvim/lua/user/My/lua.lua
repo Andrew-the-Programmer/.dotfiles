@@ -8,8 +8,21 @@ function M.IfNil(value, default)
 	return vim.F.if_nil(value, default)
 end
 
+---@generic T,U
+---@param cond boolean
+---@param a T
+---@param b U
+---@return T|U
+function M.If(cond, a, b)
+	if cond then
+		return a
+	else
+		return b
+	end
+end
+
 ---@param o table
----@param opts {sep: string, endl: string, indentation: integer}
+---@param opts {sep: string, endl: string, indentation: integer} | nil
 function M.Dump(o, opts)
 	opts = opts or {}
 	local sep = opts.sep or ","
@@ -55,12 +68,28 @@ function M.CombineTables(...)
 	return result
 end
 
+---@param t table
+---@return table
+function M.Unpack(t)
+	return (function()
+		local t = {}
+		for k, v in pairs(sf.dont_repeat("sum")) do
+			t[k] = v
+		end
+		return t
+	end)()
+end
+
 ---@param ... table
 function M.CombineLists(...)
 	local result = {}
 	for _, t in ipairs({ ... }) do
-		for _, v in pairs(t) do
-			table.insert(result, v)
+		if type(t) ~= "table" then
+			table.insert(result, t)
+		else
+			for _, v in pairs(t) do
+				table.insert(result, v)
+			end
 		end
 	end
 	return result
