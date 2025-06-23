@@ -3,13 +3,14 @@ local util = require("obsidian.util")
 local mof = require("user.plugins-config.obsidian.functions")
 local search = require("obsidian.search")
 local img_paste = require("user.plugins-config.obsidian.paste_image")
+local Note = require("obsidian.note")
 
 local mappings = {
 	["<leader>of"] = {
 		action = function()
-            local client = obsidian.get_client()
+			local client = obsidian.get_client()
 			local function action(note, selected)
-                client:open_note(note)
+				client:open_note(note)
 			end
 			mof.FindNote(action)
 		end,
@@ -43,8 +44,8 @@ local mappings = {
 					return
 				end
 				local a, b = line:find(("|%s]]"):format(label), open)
-                a = a + 1
-                b = b - 2
+				a = a + 1
+				b = b - 2
 				My.nvim.ViewInside({ row, a }, { row, b })
 			elseif link_type == search.RefTypes.Wiki then
 				My.nvim.Insert("|", { pos = { row = row, col = close - 2 } })
@@ -95,14 +96,14 @@ local mappings = {
 				note:add_alias(title)
 				note.id = id
 				note:save()
-                vim.cmd("edit!")
+				vim.cmd("edit!")
 			end)
 		end,
 		opts = { desc = "Rename obsidian note" },
 	},
 	["<leader>oip"] = {
 		action = function()
-            img_paste.PasteImage()
+			img_paste.PasteImage()
 		end,
 		opts = { buffer = true, desc = "Paste img to Obsidian" },
 	},
@@ -124,9 +125,49 @@ local mappings = {
 				print("Cursor is not on a markdown link")
 				return
 			end
-            mof.ImageEdit(fig_path)
+			mof.ImageEdit(fig_path)
 		end,
 		opts = { buffer = true, desc = "Edit Obsidian image" },
+	},
+	["<leader>oe"] = {
+		action = function()
+			local line = My.nvim.GetLine()
+			local m = line:match("^(%d). %[%[.*%]%]$")
+			if m == nil then
+				return
+			end
+			local num = tonumber(m)
+			local title = mof.GetLinkTitle()
+			if title == nil then
+				return
+			end
+			local function sub(t, p, r)
+				p = tostring(p)
+				local ps = {
+					{ " ", " " },
+					{ " ", "$" },
+					{ "^", " " },
+					{ "^", "$" },
+				}
+				for _, v in ipairs(ps) do
+					local p1, p2 = unpack(v)
+					local p3 = My.lua.If(p1 ~= "^", p1, "")
+					local p4 = My.lua.If(p2 ~= "$", p2, "")
+					t = t:gsub(p1 .. p .. p2, p3 .. r .. p4)
+				end
+				return t
+			end
+			local new_title = title
+			print(new_title)
+			new_title = sub(new_title, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
+			print(new_title)
+			new_title = sub(new_title, num, num + 1)
+			local client = obsidian.get_client()
+			local new_note = client:new_note(new_title)
+			My.nvim.InsertLine(("%s. [[%s|%s]]"):format(tostring(num + 1), new_note.id, new_title))
+			client:open_note(new_note)
+		end,
+		opts = { buffer = true, desc = "Obsidian extend" },
 	},
 }
 

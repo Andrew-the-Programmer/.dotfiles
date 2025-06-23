@@ -69,6 +69,44 @@ function M.CombineTables(...)
 end
 
 ---@param t table
+---@param ... table
+---@return nil
+function M.TableExtend(t, ...)
+	for _, v in pairs({ ... }) do
+		for k, v in pairs(v) do
+			t[k] = v
+		end
+	end
+end
+
+---@param t table
+---@param ... table
+---@return table
+function M.ListExtend(t, ...)
+	for _, v in pairs({ ... }) do
+		for _, v in ipairs(v) do
+			table.insert(t, v)
+		end
+	end
+	return t
+end
+
+function M.ListsIntersect(list1, list2)
+	local set = {}
+	for _, value in ipairs(list1) do
+		set[value] = true
+	end
+	for _, value in ipairs(list2) do
+		if set[value] then
+			return true
+		end
+	end
+
+	-- No intersection found
+	return false
+end
+
+---@param t table
 ---@return table
 function M.Unpack(t)
 	return (function()

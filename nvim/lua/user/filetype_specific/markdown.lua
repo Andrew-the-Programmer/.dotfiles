@@ -1,8 +1,12 @@
 local Keymap = My.keymaps.Keymap
 
+local function New(o)
+	return Keymap:new_nvim(o.mode, o.lhs, o.rhs, o.opts)
+end
+
 ---@type Keymap[]
 local keymaps = {
-	Keymap:new({
+	New({
 		lhs = "<localleader>me",
 		mode = "n",
 		rhs = function()
@@ -15,7 +19,7 @@ local keymaps = {
 		end,
 		opts = { desc = "Enumerate" },
 	}),
-	Keymap:new({
+	New({
 		lhs = "<localleader>mi",
 		mode = "n",
 		rhs = function()
@@ -28,7 +32,7 @@ local keymaps = {
 		end,
 		opts = { desc = "Itemize" },
 	}),
-	Keymap:new({
+	New({
 		lhs = "<localleader>mh",
 		mode = "n",
 		rhs = function()
@@ -41,7 +45,7 @@ local keymaps = {
 		end,
 		opts = { desc = "Header" },
 	}),
-	Keymap:new({
+	New({
 		lhs = "<localleader>mu",
 		mode = "v",
 		rhs = function()
@@ -55,7 +59,7 @@ local keymaps = {
 		end,
 		opts = { desc = "Abbreviation" },
 	}),
-	Keymap:new({
+	New({
 		lhs = "<localleader>ms",
 		mode = "v",
 		rhs = function()
@@ -72,7 +76,7 @@ local keymaps = {
 		end,
 		opts = { desc = "Surround" },
 	}),
-	Keymap:new({
+	New({
 		lhs = "<localleader>ma",
 		mode = "v",
 		rhs = function()

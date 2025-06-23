@@ -8,15 +8,9 @@ return {
 	update_events = "TextChanged,TextChangedI",
 	delete_check_events = "TextChanged",
 
-	-- luasnip uses this function to get the currently active filetype. This
-	-- is the (rather uninteresting) default, but it's possible to use
-	-- eg. treesitter for getting the current filetype by setting ft_func to
-	-- require("luasnip.extras.filetype_functions").from_cursor (requires
-	-- `nvim-treesitter/nvim-treesitter`). This allows correctly resolving
-	-- the current filetype in eg. a markdown-code block or `vim.cmd()`.
 	ft_func = function()
 		local ft = require("luasnip.extras.filetype_functions").from_cursor_pos()
-		-- My.nvim.Notify(My.lua.Dump(ft))
+		ft = My.lua.ListExtend(ft, My.nvim.get_synstack())
 		return ft
 	end,
 }

@@ -5,12 +5,7 @@ local Keymap = My.keymaps.Keymap
 local keymaps = {}
 
 local function New(mode, lhs, rhs, opts)
-	local new = Keymap:new({
-		mode = mode,
-		lhs = lhs,
-		rhs = rhs,
-		opts = opts,
-	})
+	local new = Keymap:new_nvim(mode, lhs, rhs, opts)
 	table.insert(keymaps, new)
 end
 

@@ -33,7 +33,16 @@ return {
 				},
 				["_"] = { "prettier", "trim_whitespace" },
 			},
+			-- formatters = {
+			-- 	latexindent = {
+			-- 		prepend_args = { "--cruft=~/tmp/latexindent" },
+			-- 	},
+			-- },
 		})
+
+		require("conform").formatters.latexindent = {
+			prepend_args = { "--cruft=/tmp/latexindent" },
+		}
 
 		vim.keymap.set({ "n", "v" }, "<leader>bf", function()
 			conform.format({
@@ -42,5 +51,19 @@ return {
 				timeout_ms = 1000,
 			})
 		end, { desc = "Format file or range (in visual mode)" })
+
+		---@type conform.FileFormatterConfig
+		local latexindent = {
+			meta = {
+				url = "https://github.com/cmhughes/latexindent.pl",
+				description = "A perl script for formatting LaTeX files that is generally included in major TeX distributions.",
+			},
+			command = "latexindent",
+			args = { "-" },
+			range_args = function(_, ctx)
+				return { "--lines", ctx.range.start[1] .. "-" .. ctx.range["end"][1], "-" }
+			end,
+			stdin = true,
+		}
 	end,
 }

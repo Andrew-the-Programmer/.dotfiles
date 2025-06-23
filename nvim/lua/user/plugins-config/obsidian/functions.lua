@@ -3,6 +3,7 @@ local M = {}
 local obsidian = require("obsidian")
 local util = require("obsidian.util")
 local Path = require("obsidian.path")
+local Note = require("obsidian.note")
 
 function M.GetImgName(ext)
 	local fig_name = vim.api.nvim_get_current_line()
@@ -51,15 +52,15 @@ end
 
 ---@param fig_path obsidian.Path|string
 function M.ImageEdit(fig_path)
-    fig_path = Path.new(fig_path)
+	fig_path = Path.new(fig_path)
 	local ext = fig_path.suffix
-    if ext == ".svg" then
-        local cmd = M.GetImgCmd_edit(fig_path.filename)
-        My.nvim.SilentExecCmdInBackground(cmd)
-    elseif ext == ".png" or ext == ".jpg" then
-        local cmd = "pinta " .. fig_path.filename
-        My.nvim.SilentExecCmdInBackground(cmd)
-    end
+	if ext == ".svg" then
+		local cmd = M.GetImgCmd_edit(fig_path.filename)
+		My.nvim.SilentExecCmdInBackground(cmd)
+	elseif ext == ".png" or ext == ".jpg" then
+		local cmd = "pinta " .. fig_path.filename
+		My.nvim.SilentExecCmdInBackground(cmd)
+	end
 end
 
 function M.FindNote(func)
@@ -124,7 +125,7 @@ function M.LinkLabelBounds()
 		local a, b = line:find(label, open, true)
 		return a, b
 	elseif link_type == search.RefTypes.Wiki then
-        return
+		return
 	end
 end
 
@@ -138,17 +139,37 @@ function M.GetImgLinkPath()
 	if not img_folder:is_absolute() then
 		img_folder = client.dir / img_folder
 	end
-    local search = require("obsidian.search")
+	local search = require("obsidian.search")
 
 	local path, _, link_type = util.parse_cursor_link()
 
 	if link_type == search.RefTypes.Wiki then
-        return img_folder / path
+		return img_folder / path
 	elseif link_type == search.RefTypes.Markdown then
-        return client.dir.filename .. "/" .. path
-    else
-        print("Unknown link type: " .. link_type)
+		return client.dir.filename .. "/" .. path
+	else
+		print("Unknown link type: " .. link_type)
 	end
+end
+
+---@param path obsidian.Path
+---@return obsidian.Note
+function M.GetNote(path)
+	return Note.from_file(path)
+end
+
+---@return string|nil
+function M.GetLinkTitle()
+	if not util.cursor_on_markdown_link() then
+		return
+	end
+	local path, _, _ = util.parse_cursor_link()
+	local client = obsidian.get_client()
+	---@type obsidian.Path
+	path = client.dir / "notes" / path
+	path = path:with_suffix(".md")
+	local note = M.GetNote(path)
+	return note.title
 end
 
 return M

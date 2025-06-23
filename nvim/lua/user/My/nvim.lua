@@ -359,4 +359,17 @@ function M.ViewInside(pos_1, pos2)
 	M.SetCursor(pos2)
 end
 
+function M.get_synstack()
+	local line = vim.fn.line(".")
+	local col = vim.fn.col(".")
+	local syns = vim.fn.synstack(line, col)
+	local result = {}
+
+	for _, syn_id in ipairs(syns) do
+		local syn_name = vim.fn.synIDattr(syn_id, "name")
+		table.insert(result, syn_name)
+	end
+	return result
+end
+
 return M

@@ -37,7 +37,7 @@ return {
 			highlight = {
 				enable = true,
 				-- Ultisnips stop working in markdown
-				-- disable = { "latex" },
+				disable = { "latex" },
 				additional_vim_regex_highlighting = { "latex", "markdown" },
 				-- additional_vim_regex_highlighting = { "latex" },
 			},

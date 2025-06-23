@@ -1,2 +1,0 @@
-[ignore]
-files = ["./lua/user/plugins-config/LuaSnip/snippets/latex/math.lua"]

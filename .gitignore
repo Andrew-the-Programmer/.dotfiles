@@ -1,3 +1,4 @@
 .ignore
 indent.log
 nvim/lua/user/plugins-config/obsidian/workspaces.lua
+nvim/Session.vim

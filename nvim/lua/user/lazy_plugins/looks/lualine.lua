@@ -1,5 +1,5 @@
 return {
-	-- https://github.com/nvim-lualine/lualine
+	-- https://github.com/nvim-lualine/lualine.nvim
 	-- Status line at the bottom
 	"nvim-lualine/lualine.nvim",
 	dependencies = {
@@ -28,6 +28,10 @@ return {
 			return string.format("󰛃 %s|%d", current_mark, total_marks)
 		end
 
+		function ibus_component()
+			return My.ibus.ibus_emoji()
+		end
+
 		require("lualine").setup({
 			options = {
 				theme = "catppuccin",
@@ -37,6 +41,7 @@ return {
 			},
 			sections = {
 				lualine_b = {
+					ibus_component,
 					{ "branch", icon = "" },
 					harpoon_component,
 					-- require("auto-session.lib").current_session_name,

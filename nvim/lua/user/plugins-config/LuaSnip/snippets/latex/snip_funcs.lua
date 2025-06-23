@@ -41,13 +41,21 @@ end
 ---@param op string
 function M.unary_operator(trig, op)
 	return s({
-		trig = ("(%s)([ ])"):format(trig),
+		trig = trig .. " ",
 		trigEngine = "pattern",
 	}, {
-		f(function(args, snip)
-			print("unary_operator")
-			return ("%s %s"):format(op, snip.captures[2])
-		end, {}),
+		t(op .. " "),
+	})
+end
+
+---@param trig string
+---@param op string
+function M.unary_operator_easy(trig, op)
+	return s({
+		trig = trig,
+		trigEngine = "pattern",
+	}, {
+		t(op),
 	})
 end
 
@@ -167,7 +175,7 @@ end
 
 ---@param nodes table|string|any
 ---@param lind_choices table
----@param uind_func fun(string): table
+---@param uind_func (fun(string):table)|nil
 function M.index(nodes, lind_choices, uind_func)
 	if nodes == nil then
 		error("nodes is nil")
@@ -196,8 +204,19 @@ function M.index(nodes, lind_choices, uind_func)
 		end, { 1 }),
 		["args"] = i(3),
 	}
+	if uind_func == nil then
+		def_nodes["uind"] = t("")
+	end
 	local fnodes = My.lua.CombineTables(def_nodes, nodes)
 	return fmta("<op><lind><uind>{<args>}", fnodes)
+end
+
+---@param nodes table|string|any
+function M.domain_operator(nodes)
+	return M.index(nodes, {
+		sn(nil, { i(1) }),
+		sn(nil, { i(1), t(" \\in "), i(2) }),
+	}, nil)
 end
 
 ---@param nodes table|string|any
@@ -240,5 +259,49 @@ function M.dont_repeat()
 		end,
 	}
 end
+
+---@param lhs string
+---@param rhs string
+function M.pair(lhs, rhs)
+	return s({
+		trig = lhs,
+		wordTrig = false,
+		snippetType = "autosnippet",
+		priority = -100,
+	}, {
+		t(lhs),
+		i(1),
+		t(rhs),
+	})
+end
+
+---@param lhs string
+---@param rhs string
+---@param ind string|nil
+function M.lind_snip(lhs, rhs, ind)
+	return s({
+		trig = string.format("(%s)(%s)", lhs, rhs),
+		trigEngine = "pattern",
+		snippetType = "autosnippet",
+	}, {
+		f(function(_, snip)
+			local c1 = snip.captures[1]
+			local c2 = ind or snip.captures[2]
+			return c1 .. "_" .. c2
+		end),
+	})
+end
+
+s({
+	trig = "(%a)(%d)",
+	trigEngine = "pattern",
+	snippetType = "autosnippet",
+}, {
+	f(function(_, snip)
+		local c1 = snip.captures[1]
+		local c2 = snip.captures[2]
+		return c1 .. "_" .. c2
+	end),
+})
 
 return M

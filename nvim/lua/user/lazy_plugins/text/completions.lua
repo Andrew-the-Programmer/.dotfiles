@@ -3,20 +3,21 @@ return {
 	"hrsh7th/nvim-cmp",
 	event = { "BufReadPost", "BufNewFile" },
 	dependencies = {
-		"Exafunction/windsurf.nvim",
-
+		-- LSP
 		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-buffer",
-		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-nvim-lsp-signature-help",
 		"folke/lazydev.nvim",
+		-- This tiny plugin adds vscode-like pictograms to neovim built-in lsp
+		"onsails/lspkind.nvim",
+		"hrsh7th/cmp-buffer",
+		"hrsh7th/cmp-path",
 
 		-- AI
+		"Exafunction/windsurf.nvim",
 		"zbirenbaum/copilot-cmp",
 		"Exafunction/windsurf.nvim",
 
 		-- Snippets
-		"rafamadriz/friendly-snippets",
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"SirVer/ultisnips",
@@ -25,26 +26,15 @@ return {
 			dependencies = { "SirVer/ultisnips" },
 			opts = {},
 		},
-
-		"onsails/lspkind.nvim",
-		"windwp/nvim-ts-autotag",
-		{
-			-- https://github.com/windwp/nvim-autopairs
-			-- complete double ", (, [, { etc...
-			"windwp/nvim-autopairs",
-			event = "InsertEnter",
-			opts = {},
-		},
-
-		"kristijanhusak/vim-dadbod-ui",
 	},
 	config = function()
-		local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 		local cmp = require("cmp")
-		local lspkind = require("lspkind")
 
-		-- Integrate nvim-autopairs with cmp
-		cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+		-- local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+		-- -- Integrate nvim-autopairs with cmp
+		-- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
+		local lspkind = require("lspkind")
 
 		cmp.setup({
 			snippet = {

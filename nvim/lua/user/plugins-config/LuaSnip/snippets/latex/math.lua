@@ -19,7 +19,7 @@ local dl = require("luasnip.extras").dynamic_lambda
 
 local sf = require("user.plugins-config.LuaSnip.snippets.latex.snip_funcs")
 
-ls.add_snippets("latex", {
+ls.add_snippets("texMathZoneTD", {
 	sf.greek_letter("a", "alpha"),
 	sf.greek_letter("b", "beta"),
 	sf.greek_letter("g", "gamma"),
@@ -65,19 +65,52 @@ ls.add_snippets("latex", {
 	sf.keyword_simple("FF", "FF"),
 
 	sf.keyword_simple("inf", "infty"),
+	sf.keyword_simple("bs", "blacksquare"),
 
 	sf.power("sr", "2"),
 	sf.power("cb", "3"),
 
-	sf.binary_operator_auto("--", "\\dash"),
+	s({
+		trig = "(%a)(%d)",
+		trigEngine = "pattern",
+		snippetType = "autosnippet",
+	}, {
+		f(function(_, snip)
+			local c1 = snip.captures[1]
+			local c2 = snip.captures[2]
+			return c1 .. "_" .. c2
+		end),
+	}),
 
-	sf.unary_operator("d", "\\d"),
-	sf.unary_operator("D", "\\D"),
+	sf.lind_snip("%a", "%d"),
+	sf.lind_snip("%a", "ii", "i"),
+	sf.lind_snip("[abcdmnxyz]", "j", "j"),
+	sf.lind_snip("%a", "nn", "n"),
+	sf.lind_snip("%a", "mm", "m"),
+
+	-- sf.unary_operator("d", "\\d"),
+	-- sf.unary_operator("D", "\\D"),
+	s({
+		trig = "([dD])([%a ])",
+		trigEngine = "pattern",
+	}, {
+		f(function(_, snip)
+			local c1 = snip.captures[1]
+			local c2 = snip.captures[2]
+			return "\\" .. c1 .. My.lua.If(c2 == " ", " ", " " .. c2)
+		end),
+	}),
+	-- TODO: improve this
 	sf.unary_operator("L", "\\Laplace"),
 	sf.unary_operator("DA", "\\DAlambert"),
 	sf.unary_operator("N", "\\Nabla"),
 	sf.unary_operator("G", "\\grad"),
-	sf.unary_operator("not", "\\lnot"),
+
+	sf.unary_operator_easy("not", "\\lnot"),
+	sf.unary_operator_easy("ex", "\\exists"),
+	sf.unary_operator_easy("nex", "\\not\\exists"),
+	sf.unary_operator_easy("fa", "\\forall"),
+	sf.unary_operator_easy("nfa", "\\not\\forall"),
 
 	sf.binary_operator("eq", "="),
 	sf.binary_operator("ne", "\\neq"),
@@ -93,17 +126,31 @@ ls.add_snippets("latex", {
 	sf.binary_operator("gg", "\\gg"),
 	sf.binary_operator_auto(">>", "\\gg"),
 	sf.binary_operator("im", "\\implies"),
-	sf.binary_operator("imb", "\\impliedby"),
 	sf.binary_operator_auto("->", "\\implies"),
+	sf.binary_operator("imb", "\\impliedby"),
 	sf.binary_operator_auto("<-", "\\impliedby"),
+	sf.binary_operator("sm", "\\same"),
+	sf.binary_operator("ht", "\\hthen"),
+	sf.binary_operator_auto("/>", "\\hthen"),
+	sf.binary_operator("to", "\\to"),
 
 	sf.binary_operator("un", "\\cup"),
 	sf.binary_operator("ir", "\\cap"),
 	sf.binary_operator("or", "\\lor"),
 	sf.binary_operator("and", "\\land"),
+	sf.binary_operator("in", "\\in"),
+	sf.binary_operator("ss", "\\subset"),
+	sf.binary_operator("se", "\\subseteq"),
 
-	sf.binary_operator_auto("**", "\\times"),
-	sf.binary_operator_auto("xx", "\\cdot"),
+	sf.binary_operator_auto("**", "\\cdot"),
+	sf.binary_operator_auto("xx", "\\times"),
+	sf.binary_operator_auto("--", "\\dash"),
+	sf.binary_operator_auto("..", "\\dots"),
+	s({
+		trig = ",q",
+		snippetType = "autosnippet",
+		wordTrig = false,
+	}, { t(", \\quad ") }),
 
 	sf.unary_func("circled", "circled"),
 	sf.unary_func("ol", "overline"),
@@ -116,11 +163,50 @@ ls.add_snippets("latex", {
 	sf.unary_func("floor", "floor"),
 	sf.unary_func("round", "round"),
 	sf.unary_func("vec", "vec"),
-	sf.unary_func("sur", "surround"),
+	sf.unary_func("dot", "dot"),
+	sf.unary_func("sure", "surround"),
+	s(
+		{
+			trig = "sure([<{%(%[tcbr]?)([>}%)%]tcbr]?)",
+			trigEngine = "pattern",
+		},
+		fmta("\\surround<1>{<2>}", {
+			[1] = d(1, function(_, snip)
+				local c1 = snip.captures[1]
+				local c2 = snip.captures[2]
+				if c1:len() == 0 then
+					return sn(nil, { i(1) })
+				end
+				if c1 == "t" then
+					c1 = "<"
+				elseif c1 == "c" then
+					c1 = "{"
+				elseif c1 == "b" then
+					c1 = "("
+				elseif c1 == "r" then
+					c1 = "["
+				end
+				if c2:len() == 0 then
+					return sn(nil, { t(c1), i(1) })
+				end
+				if c2 == "t" then
+					c2 = ">"
+				elseif c2 == "c" then
+					c2 = "}"
+				elseif c2 == "b" then
+					c2 = ")"
+				elseif c2 == "r" then
+					c2 = "]"
+				end
+				return sn(nil, { t(c1 .. c2) })
+			end),
+			[2] = i(2),
+		})
+	),
 	sf.unary_func("set", "set"),
 	sf.unary_func("gr", "group"),
 	sf.unary_func("grr", "groupr"),
-	sf.unary_func("grt", "groupt"),
+	sf.unary_func("grt", "grouped"),
 	sf.unary_func("tt", "text"),
 	sf.unary_func("ti", "textit"),
 
@@ -155,10 +241,10 @@ ls.add_snippets("latex", {
 			trigEngine = "pattern",
 		},
 		fmta("\\<op><1>{<2>}{<3>}", {
-			op = f(function(args, snip)
+			op = f(function(_, snip)
 				return snip.captures[1]
 			end),
-			[1] = d(1, function(args, snip)
+			[1] = d(1, function(_, snip)
 				local capture = snip.captures[2]
 				if capture:len() > 0 then
 					return sn(nil, { t("[" .. capture .. "]") })
@@ -166,7 +252,7 @@ ls.add_snippets("latex", {
 					return sn(nil, {})
 				end
 			end),
-			[2] = d(2, function(args, snip)
+			[2] = d(2, function(_, snip)
 				local capture = snip.captures[3]
 				if capture:len() > 0 then
 					return sn(nil, { t(capture) })
@@ -174,7 +260,7 @@ ls.add_snippets("latex", {
 					return sn(nil, { i(1) })
 				end
 			end),
-			[3] = d(3, function(args, snip)
+			[3] = d(3, function(_, snip)
 				local capture = snip.captures[4]
 				if capture:len() > 0 then
 					return sn(nil, { t(capture) })
@@ -191,7 +277,7 @@ ls.add_snippets("latex", {
 			trigEngine = "pattern",
 		},
 		fmta("\\vec<op>{<>}{<>}", {
-			op = f(function(args, snip)
+			op = f(function(_, snip)
 				local capture = snip.captures[2]
 				if capture == "p" then
 					return "prod"
@@ -204,38 +290,13 @@ ls.add_snippets("latex", {
 		})
 	),
 	-- lim, limsup, liminf
-	s({
-		trig = "lim([is]?)",
-		trigEngine = "pattern",
-	}, {
-		t("\\lim"),
-		f(function(args, snip)
-			local capture = snip.captures[1]
-			if capture == "s" then
-				return "sup"
-			elseif capture == "i" then
-				return "inf"
-			else
-				return ""
-			end
-		end),
-		m(1, "^$", "", "_{"),
-		c(1, {
-			sn(nil, { i(1), t(" \\to "), i(2) }),
-			sn(nil, { i(1) }),
-		}),
-		m(1, "^$", "", "}"),
-		t("{"),
-		i(2),
-		t("}"),
-	}, sf.dont_repeat("lim")),
 	s(
 		{
 			trig = "lim([is]?)",
 			trigEngine = "pattern",
 		},
 		sf.index(
-			f(function(args, snip)
+			f(function(_, snip)
 				local capture = snip.captures[1]
 				if capture == "s" then
 					return "\\limsup"
@@ -249,12 +310,26 @@ ls.add_snippets("latex", {
 				sn(nil, { i(1), t(" \\to "), i(2) }),
 				sn(nil, { i(1) }),
 			},
-			function(lind)
-				return {}
-			end
+			nil
 		),
-		sf.dont_repeat("lim")
+		sf.dont_repeat()
 	),
+
+	-- sup, inf, min, max
+	s({
+		trig = "sup",
+	}, sf.domain_operator("\\sup"), sf.dont_repeat()),
+	s({
+		trig = "inf",
+	}, sf.domain_operator("\\inf"), sf.dont_repeat()),
+	s({
+		trig = "min",
+	}, sf.domain_operator("\\min"), sf.dont_repeat()),
+	s({
+		trig = "max",
+	}, sf.domain_operator("\\max"), sf.dont_repeat()),
+
+	-- sum, union, intersection, product, or, and
 	s({
 		trig = "sum",
 	}, sf.big_operator("\\sum"), sf.dont_repeat()),
@@ -283,13 +358,14 @@ ls.add_snippets("latex", {
 		sf.index(
 			"\\int",
 			{
-				sn(nil, { i(1, "-\\infty") }),
+				sn(nil, { i(1) }),
+				t("-\\infty"),
 				sn(nil, { i(1), t(" \\in "), i(2) }),
 			},
 			---@param lind string
 			---@return table
 			function(lind)
-				if lind:match("^.* \\in .*$") then
+				if lind == "" or lind:match("^.* \\in .*$") then
 					return {}
 				else
 					return {
@@ -318,7 +394,7 @@ ls.add_snippets("latex", {
 			snippetType = "autosnippet",
 		},
 		fmta("\\frac{<>}{<>}", {
-			f(function(args, snip)
+			f(function(_, snip)
 				return snip.captures[1]
 			end),
 			i(1),
@@ -332,9 +408,44 @@ ls.add_snippets("latex", {
 		},
 		fmta("\\frac{<>}{<>}", {
 			i(1),
-			f(function(args, snip)
+			f(function(_, snip)
 				return snip.captures[1]
 			end),
 		})
 	),
+	-- sf.pair("(", ")"),
+	-- sf.pair("[", "]"),
+	-- sf.pair("{", "}"),
+	-- sf.pair('"', '"'),
+	-- s({
+	-- 	trig = "<>",
+	-- 	wordTrig = false,
+	-- 	snippetType = "autosnippet",
+	-- }, {
+	-- 	t("\\groupt{"),
+	-- 	i(1),
+	-- 	t("}"),
+	-- }),
+	-- s({
+	-- 	trig = "((",
+	-- 	wordTrig = false,
+	-- 	snippetType = "autosnippet",
+	-- }, {
+	-- 	t("\\group{"),
+	-- 	i(1),
+	-- 	t("}"),
+	-- }),
+	-- s({
+	-- 	trig = "[[",
+	-- 	wordTrig = false,
+	-- 	snippetType = "autosnippet",
+	-- 	priority = -50,
+	-- }, {
+	-- 	t("\\groupr{"),
+	-- 	i(1),
+	-- 	t("}"),
+	-- }),
 })
+
+ls.filetype_extend("texMathZoneTI", { "texMathZoneTD" })
+ls.filetype_extend("mkdMath", { "texMathZoneTD" })
