@@ -20,7 +20,7 @@ local mappings = {
 		action = function()
 			local function action(note, selected)
 				local link = util.wiki_link_path_prefix({ path = note.id, label = note.title })
-				My.nvim.Insert(link)
+				My.nvim.InsertText(link)
 			end
 			mof.FindNote(action)
 		end,
@@ -48,7 +48,7 @@ local mappings = {
 				b = b - 2
 				My.nvim.ViewInside({ row, a }, { row, b })
 			elseif link_type == search.RefTypes.Wiki then
-				My.nvim.Insert("|", { pos = { row = row, col = close - 2 } })
+				My.nvim.InsertText("|", { pos = { row = row, col = close - 2 } })
 				My.nvim.SetCursor({ row, close })
 				vim.cmd("startinsert")
 			else
@@ -132,12 +132,20 @@ local mappings = {
 	["<leader>oe"] = {
 		action = function()
 			local line = My.nvim.GetLine()
-			local m = line:match("^(%d). %[%[.*%]%]$")
+			local m = line:match("^(%d+). %[%[.*%]%]")
 			if m == nil then
 				return
 			end
 			local num = tonumber(m)
-			local title = mof.GetLinkTitle()
+			if not util.cursor_on_markdown_link() then
+				return
+			end
+			local path, link_label, _ = util.parse_cursor_link()
+			local client = obsidian.get_client()
+			local notes_path = client.dir / client.opts.notes_subdir
+			local note_path = client:new_note_path({ id = path, dir = notes_path })
+			local note = mof.GetNote(note_path)
+			local title = note.title
 			if title == nil then
 				return
 			end
@@ -158,13 +166,14 @@ local mappings = {
 				return t
 			end
 			local new_title = title
-			print(new_title)
 			new_title = sub(new_title, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
-			print(new_title)
 			new_title = sub(new_title, num, num + 1)
-			local client = obsidian.get_client()
+			local new_link_label = link_label
+			new_link_label = sub(new_link_label, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
+			new_link_label = sub(new_link_label, num, num + 1)
 			local new_note = client:new_note(new_title)
-			My.nvim.InsertLine(("%s. [[%s|%s]]"):format(tostring(num + 1), new_note.id, new_title))
+			local new_link = util.wiki_link_id_prefix({ id = new_note.id, label = new_link_label })
+			My.nvim.InsertLine(("%s. %s"):format(tostring(num + 1), new_link))
 			client:open_note(new_note)
 		end,
 		opts = { buffer = true, desc = "Obsidian extend" },

@@ -6,20 +6,11 @@ local i = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
-local m = require("luasnip.extras").match
-local rep = require("luasnip.extras").rep
-local fmt = require("luasnip.extras.fmt").fmt
 local fmta = require("luasnip.extras.fmt").fmta
-local r = ls.restore_node
-local l = require("luasnip.extras").lambda
-local p = require("luasnip.extras").partial
-local m = require("luasnip.extras").match
-local n = require("luasnip.extras").nonempty
-local dl = require("luasnip.extras").dynamic_lambda
 
 local sf = require("user.plugins-config.LuaSnip.snippets.latex.snip_funcs")
 
-ls.add_snippets("texMathZoneTD", {
+ls.add_snippets("Math", {
 	sf.greek_letter("a", "alpha"),
 	sf.greek_letter("b", "beta"),
 	sf.greek_letter("g", "gamma"),
@@ -445,7 +436,15 @@ ls.add_snippets("texMathZoneTD", {
 	-- 	i(1),
 	-- 	t("}"),
 	-- }),
-})
 
-ls.filetype_extend("texMathZoneTI", { "texMathZoneTD" })
-ls.filetype_extend("mkdMath", { "texMathZoneTD" })
+	s({
+		trig = '"',
+		wordTrig = true,
+		snippetType = "autosnippet",
+		priority = -100,
+	}, {
+		t("\\text{\\textit{"),
+		i(1),
+		t("}}"),
+	}),
+})

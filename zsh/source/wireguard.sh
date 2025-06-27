@@ -47,6 +47,9 @@ function wg-edit-config() {
     sudo nvim "$wg_config_file"
 }
 
+function wg-ctl() {
+    sudo systemctl "$1" "wg-quick@$2"
+}
 function wg_m() {
     wg-set-connection
     sudo systemctl "$1" "wg-quick@$wg_connection"

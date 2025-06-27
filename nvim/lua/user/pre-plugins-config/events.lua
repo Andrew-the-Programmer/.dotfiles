@@ -16,7 +16,7 @@
 }) ]]
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight selection on yank",
+	desc = "Highlight selection on yank",
 	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
 	pattern = "*",
 	callback = function()
@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-    desc = "Open help in vertical split",
+	desc = "Open help in vertical split",
 	group = vim.api.nvim_create_augroup("vertical_help", { clear = true }),
 	pattern = "help",
 	callback = function()

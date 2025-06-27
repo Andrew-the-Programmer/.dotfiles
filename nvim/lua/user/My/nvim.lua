@@ -18,6 +18,18 @@ function M.Pos:new(row, col)
 	return o
 end
 
+function M.Pos:move(pos)
+	return M.Pos:new(self.row + pos.row, self.col + pos.col)
+end
+
+function M.Pos:move_col(i)
+	return self:move(M.Pos:new(0, i))
+end
+
+function M.Pos:move_row(i)
+	return self:move(M.Pos:new(i, 0))
+end
+
 function M.Pos:unpack()
 	return self.row, self.col
 end
@@ -60,17 +72,27 @@ function M.ExecCmd(cmd)
 	vim.cmd("exec " .. My.lua.Surround("!" .. cmd, "'"))
 end
 
----@return Pos
-function M.GetCursorPos()
-	local _, row, col = unpack(vim.fn.getpos("."))
-	return M.Pos:new(row, col)
-end
-
 --- @param expr string see vim.fn.getpos
 ---@return Pos
 function M.GetPos(expr)
 	local _, row, col = unpack(vim.fn.getpos(expr))
 	return M.Pos:new(row, col)
+end
+
+---@return Pos
+function M.GetCursorPos()
+	return M.GetPos(".")
+end
+
+---@param pos Pos
+function M.SetCursor(pos)
+	-- vim.fn.setpos(".", { 0, pos[1], pos[2], 0 })
+	vim.fn.cursor(pos.row, pos.col)
+end
+
+---@param pos Pos
+function M.MoveCursor(pos)
+	M.SetCursor(M.GetCursorPos():move(pos))
 end
 
 ---@return Pos, Pos
@@ -184,6 +206,19 @@ function M.GetLine(n, opts)
 	return vim.api.nvim_buf_get_lines(buffer, n - 1, n, strict_indexing)[1]
 end
 
+function M.BufBeginPos()
+	return M.Pos:new(1, 1)
+end
+
+---@param buf integer|nil
+function M.BufEndPos(buf)
+	buf = buf or 0
+	local row = vim.api.nvim_buf_line_count(buf)
+	local line = M.GetLine(row)
+	local col = line:len() + 1
+	return M.Pos:new(row, col)
+end
+
 ---@param from Pos
 ---@param to Pos
 ---@return string
@@ -214,20 +249,11 @@ function M.SetLine(text, opts)
 end
 
 ---@param text string
----@param opts { buffer: integer|?, pos: {row: integer, col: integer} }|?
-function M.Insert(text, opts)
+---@param opts { buffer: integer|?, pos: Pos|? }|?
+function M.InsertText(text, opts)
 	opts = opts or {}
-	local pos = opts.pos
-	local row, col = M.GetCursorPos():unpack()
-	if pos then
-		row, col = pos.row, pos.col
-	end
-	print(row, col)
-	local line = M.GetLine(row)
-	line = string.sub(line, 1, col) .. text .. string.sub(line, col + 1, -1)
-	print(line)
-	local buffer = opts.buffer or 0
-	M.SetLine(line, { line_number = row, buffer = buffer })
+	local pos = opts.pos or M.GetCursorPos()
+	M.SubstituteText(text, pos, pos:move_col(-1))
 end
 
 ---@param text string
@@ -347,10 +373,6 @@ end
 
 function M.FileBaseName()
 	return My.sys.FileBaseName(M.File())
-end
-
-function M.SetCursor(pos)
-	vim.fn.setpos(".", { 0, pos[1], pos[2], 0 })
 end
 
 function M.ViewInside(pos_1, pos2)

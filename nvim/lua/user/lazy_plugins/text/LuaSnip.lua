@@ -4,7 +4,7 @@ return {
 		dependencies = { "L3MON4D3/LuaSnip" },
 		init = function()
 			-- Mandatory setup function
-			require("luasnip_snippets.common.snip_utils").setup()
+			-- require("luasnip_snippets.common.snip_utils").setup()
 		end,
 	},
 	{
@@ -16,6 +16,5 @@ return {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
 		},
-		config = fun,
 	},
 }

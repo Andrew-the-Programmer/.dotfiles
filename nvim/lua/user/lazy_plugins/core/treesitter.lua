@@ -31,7 +31,7 @@ return {
 
 			indent = {
 				enable = true,
-				-- disable = { "latex" },
+				disable = { "latex" },
 			},
 
 			highlight = {

@@ -21,6 +21,64 @@ function M.If(cond, a, b)
 	end
 end
 
+---@param list table
+---@param value any
+function M.ListContains(list, value)
+	for _, v in pairs(list) do
+		if v == value then
+			return true
+		end
+	end
+	return false
+end
+
+---@param t table
+---@param func fun(value: any): any
+---@return table
+function M.Map(t, func)
+	local result = {}
+	for k, v in pairs(t) do
+		result[k] = func(v)
+	end
+	return result
+end
+
+---@param t table
+---@param func fun(value: any): any
+---@return boolean
+function M.Any(t, func)
+	local r
+	if func == nil then
+		r = t
+	else
+		r = M.Map(t, func)
+	end
+	for _, v in pairs(r) do
+		if v then
+			return true
+		end
+	end
+	return false
+end
+
+---@param t table
+---@param func fun(value: any): any
+---@return boolean
+function M.All(t, func)
+	local r
+	if func == nil then
+		r = t
+	else
+		r = M.Map(t, func)
+	end
+	for _, v in pairs(r) do
+		if not v then
+			return false
+		end
+	end
+	return true
+end
+
 ---@param o table
 ---@param opts {sep: string, endl: string, indentation: integer} | nil
 function M.Dump(o, opts)
@@ -57,6 +115,12 @@ function M.Dump(o, opts)
 	return s .. string.rep(tab, indentation - 2) .. "}"
 end
 
+function M.Print(...)
+	print(unpack(M.Map({ ... }, function(v)
+		return M.Dump(v)
+	end)))
+end
+
 ---@param ... table
 function M.CombineTables(...)
 	local result = {}
@@ -83,12 +147,22 @@ end
 ---@param ... table
 ---@return table
 function M.ListExtend(t, ...)
-	for _, v in pairs({ ... }) do
-		for _, v in ipairs(v) do
+	for _, l in pairs({ ... }) do
+		for _, v in ipairs(l) do
 			table.insert(t, v)
 		end
 	end
 	return t
+end
+
+---@param t table
+---@generic T
+---@param value T
+---@return boolean
+function M.ListFind(t, value)
+	return M.Any(t, function(v)
+		return v == value
+	end)
 end
 
 function M.ListsIntersect(list1, list2)
@@ -101,8 +175,6 @@ function M.ListsIntersect(list1, list2)
 			return true
 		end
 	end
-
-	-- No intersection found
 	return false
 end
 
@@ -131,10 +203,6 @@ function M.CombineLists(...)
 		end
 	end
 	return result
-end
-
-function M.Print(value, opts)
-	print(M.Dump(value, opts))
 end
 
 function M.Require(module)

@@ -79,9 +79,21 @@ return {
 	-- See toggleterm config
 	-- map("t", "<C-{", "<esc>", { desc = "Escape terminal mode" })
 
-	Keymap:new_nvim("i", { "dd", "вв", "<C-х>" }, "<esc>", { desc = "Enter normal mode" }),
+	-- Keymap:new_nvim("i", { "dd", "вв", "<C-х>" }, "<esc>", { desc = "Enter normal mode" }),
 
 	Keymap:new_nvim("n", "<leader>tm", function()
-        vim.cmd("Inspect")
+		local ft = require("luasnip.extras.filetype_functions").from_cursor_pos()
+		ft = My.lua.ListExtend(ft, My.nvim.get_synstack())
+
+		if
+			My.lua.Any(ft, function(v)
+				return My.lua.ListFind({ "texMathZoneTI", "texMathZoneTD", "mkdMath" }, v)
+			end) and not My.lua.ListFind(ft, "texMathText")
+		then
+            print()
+			table.insert(ft, "Math")
+		end
+
+		My.lua.Print(ft)
 	end, { desc = "Print syntax stack" }),
 }

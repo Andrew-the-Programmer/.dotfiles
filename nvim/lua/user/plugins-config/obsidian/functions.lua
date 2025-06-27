@@ -165,10 +165,8 @@ function M.GetLinkTitle()
 	end
 	local path, _, _ = util.parse_cursor_link()
 	local client = obsidian.get_client()
-	---@type obsidian.Path
-	path = client.dir / "notes" / path
-	path = path:with_suffix(".md")
-	local note = M.GetNote(path)
+	local note_path = client:new_note_path({ id = path })
+	local note = M.GetNote(note_path)
 	return note.title
 end
 

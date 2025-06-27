@@ -11,6 +11,15 @@ return {
 	ft_func = function()
 		local ft = require("luasnip.extras.filetype_functions").from_cursor_pos()
 		ft = My.lua.ListExtend(ft, My.nvim.get_synstack())
+
+		if
+			My.lua.Any(ft, function(v)
+				return My.lua.ListFind({ "texMathZoneTI", "texMathZoneTD", "mkdMath" }, v)
+			end) and not My.lua.ListFind(ft, "texMathTextConcArg")
+		then
+			table.insert(ft, "Math")
+		end
+
 		return ft
 	end,
 }
