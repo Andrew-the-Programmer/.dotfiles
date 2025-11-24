@@ -198,3 +198,35 @@ function clip-in() {
 function clip-out() {
     xclip -selection clipboard -o
 }
+
+function my-public-ip() {
+    curl ifconfig.me
+}
+
+function pdf2png() {
+    while [[ $# -gt 0 ]]; do
+      case $1 in
+        -e|--extension)
+          ext="$2"
+          shift
+          shift
+          ;;
+        -*|--*)
+          echo "Unknown option $1"
+          exit 1
+          ;;
+        *)
+            file="$1"
+          shift
+          ;;
+      esac
+    done
+    inkscape "$file" "--export-type=$ext"
+}
+
+alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node=$(pass show tailscale/exit-node/ip)'
+alias vpn-down='sudo tailscale set --exit-node= || sudo tailscale down'
+
+alias tailget='sudo tailscale file get .'
+
+alias nvimfzf='nvim "$(fzf)"'

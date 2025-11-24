@@ -54,6 +54,6 @@ return {
     end,
     condition = {
         filetype = { "cpp" },
-        dir = vim.fn.getcwd(),
+        -- dir = vim.fn.getcwd(),
     },
 }

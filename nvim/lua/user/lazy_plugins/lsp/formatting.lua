@@ -4,8 +4,18 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local conform = require("conform")
+		local util = require("conform.util")
 
 		conform.setup({
+			formatters = {
+				sqlfluff = {
+					exit_codes = { 0, 1 },
+				},
+				pg_format = {
+					cwd = util.root_file({ ".pg_format" }),
+					require_cwd = true,
+				},
+			},
 			default_format_opts = {
 				lsp_format = "fallback",
 			},
@@ -15,6 +25,7 @@ return {
 				cpp = { "clang_format", "uncrustify" },
 				lua = { "stylua" },
 				ruby = { "rubocop" },
+				json = { "prettierd" },
 				markdown = {
 					"prettier",
 					-- "mdformat",
@@ -22,9 +33,11 @@ return {
 					-- "textlint",
 				},
 				cmake = { "cmake_format" },
-				sql = { "sqlfluff" },
+				-- sql = { "sqlfluff" },
+				sql = { "pg_format" },
 				tex = { "latexindent" },
 				css = { "css_beautify" },
+				html = { "html_beautify" },
 				["*"] = {
 					-- "codespell",
 					"typos",

@@ -1,4 +1,5 @@
 local obsidian = require("obsidian")
+local util = require("obsidian.util")
 
 return {
 	-- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
@@ -8,17 +9,10 @@ return {
 		end,
 		opts = { noremap = false, expr = true, buffer = true },
 	},
-	-- Toggle check-boxes.
-	["<leader>ch"] = {
-		action = function()
-			return obsidian.util.toggle_checkbox()
-		end,
-		opts = { buffer = true },
-	},
 	-- Smart action depending on context, either follow link or toggle checkbox.
-	["<cr>"] = {
+	["<CR>"] = {
 		action = function()
-			return obsidian.util.smart_action()
+			return util.smart_action()
 		end,
 		opts = { buffer = true, expr = true },
 	},

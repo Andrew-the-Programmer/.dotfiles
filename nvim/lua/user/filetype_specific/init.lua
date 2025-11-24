@@ -44,6 +44,7 @@ local function main()
 		"python",
 		"tex",
 		"lua",
+		"json",
 	}
 
 	local parent = "user.filetype_specific."

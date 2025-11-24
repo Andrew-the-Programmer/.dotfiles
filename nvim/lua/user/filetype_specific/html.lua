@@ -1,7 +1,7 @@
 local Keymap = My.keymaps.Keymap
 
 local keymaps = {
-	Keymap:new_nvim("<localleader>s", "v", function()
+	Keymap:new_nvim("v", "<localleader>s", function()
 		local from, to = My.nvim.GetVisualSelection()
 		print(from.col, to.col)
 		local text = My.nvim.GetText(from, to)

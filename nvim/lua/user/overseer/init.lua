@@ -2,16 +2,9 @@ local overseer = require("overseer")
 
 local M = {}
 
-function M.RegisterTemplates()
-    local templates_folder = {"user", "overseer", "templates"}
-    local ls_cmd = "ls " .. "~/.config/nvim/lua/" .. table.concat(templates_folder, "/")
-    for t in io.popen(ls_cmd):lines() do
-        t = My.sys.FileBaseName(t)
-        t = table.concat(templates_folder, ".") .. "." .. t
-        overseer.register_template(require(t))
-    end
-end
+M.config = require("user.overseer.config")
+M.opts = require("user.overseer.opts")
 
-M.RegisterTemplates()
+overseer.setup(M.opts)
 
 return M

@@ -20,12 +20,12 @@ return {
 		-- Snippets
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
-		"SirVer/ultisnips",
-		{
-			"quangnguyen30192/cmp-nvim-ultisnips",
-			dependencies = { "SirVer/ultisnips" },
-			opts = {},
-		},
+		-- "SirVer/ultisnips",
+		-- {
+		-- 	"quangnguyen30192/cmp-nvim-ultisnips",
+		-- 	dependencies = { "SirVer/ultisnips" },
+		-- 	opts = {},
+		-- },
 	},
 	config = function()
 		local cmp = require("cmp")

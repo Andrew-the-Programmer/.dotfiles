@@ -12,6 +12,8 @@ export GOPATH=$HOME/.local/share/go
 export PATH=$HOME/.miniconda/bin:$PATH
 export PATH=$HOME/.local/include:$PATH
 export TEXMFHOME=~/texmf
+export SUDO_ASKPASS=/usr/local/bin/sudo-askpass
+alias sudo='sudo -A'
 
 # eval "$(fnm env)"
 eval "$(zoxide init zsh)"

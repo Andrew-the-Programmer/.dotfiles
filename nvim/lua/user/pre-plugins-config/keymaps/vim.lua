@@ -1,5 +1,7 @@
 local Keymap = My.keymaps.Keymap
 
+-- vim.o.langmap = "сc,мv,рh,оj,лk,дl"
+
 return {
 	--Navigation-------------------------------------------------------------------
 
@@ -44,17 +46,19 @@ return {
 	--Clipboard--------------------------------------------------------------------
 
 	-- Copy to clipboard
+
 	Keymap:new_map({
 		["<leader>y"] = { "n", "v" },
-		["<C-с>"] = { "n", "i" },
 	}, [["+y]], { desc = "Copy to clipboard" }),
 	Keymap:new_nvim("n", "<leader>Y", [["+Y]], { desc = "Copy line to clipboard" }),
 
 	-- Paste from clipboard
 	Keymap:new_map({
 		["<leader>p"] = { "n", "v" },
-		["<C-м>"] = { "n", "i" },
-	}, [["+p]], { desc = "Paste from clipboard" }),
+		["оо"] = { "n", "i" },
+	}, function()
+		vim.cmd('normal "+p')
+	end, { desc = "Paste from clipboard" }),
 	Keymap:new_nvim("n", "<leader>P", [["+P]], { desc = "Paste line from clipboard" }),
 
 	--Buffer-----------------------------------------------------------------------
@@ -70,6 +74,10 @@ return {
 
 	Keymap:new_nvim("n", "<leader>w", "<cmd>w<cr>", { silent = false, desc = "Save buffer" }),
 	Keymap:new_nvim("n", "<leader>q", "<cmd>q<cr>", { silent = false, desc = "Quit window" }),
+	Keymap:new_nvim("n", "<leader>Q", function()
+		vim.cmd("wa")
+		vim.cmd("qa")
+	end, { silent = false, desc = "Save and Quit all" }),
 
 	-- Vim: "U": restore (undo) last changed line
 	Keymap:new_nvim("n", "U", "<C-r>", { desc = "Redo" }),
@@ -90,7 +98,7 @@ return {
 				return My.lua.ListFind({ "texMathZoneTI", "texMathZoneTD", "mkdMath" }, v)
 			end) and not My.lua.ListFind(ft, "texMathText")
 		then
-            print()
+			print()
 			table.insert(ft, "Math")
 		end
 

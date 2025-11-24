@@ -7,5 +7,8 @@ return My.FiletypeConfig:new({
 
 		My.opts.format_on_save = false
 		vim.opt.wrap = false
+		vim.opt.wrapmargin = 80
+		vim.opt.textwidth = 80
+        -- print("default")
 	end,
 })

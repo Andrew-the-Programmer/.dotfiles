@@ -29,6 +29,6 @@ return {
 	end,
 	condition = {
 		filetype = { "bash", "sh" },
-		dir = vim.fn.getcwd(),
+		-- dir = vim.fn.getcwd(),
 	},
 }

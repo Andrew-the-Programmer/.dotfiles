@@ -14,7 +14,7 @@ local mappings = {
 			end
 			mof.FindNote(action)
 		end,
-		opts = { desc = "Insert link" },
+		opts = { desc = "Obsidian find note" },
 	},
 	["<leader>oli"] = {
 		action = function()
@@ -24,7 +24,7 @@ local mappings = {
 			end
 			mof.FindNote(action)
 		end,
-		opts = { desc = "Insert link" },
+		opts = { desc = "Obsidian insert link" },
 	},
 	["<leader>ole"] = {
 		action = function()
@@ -55,7 +55,7 @@ local mappings = {
 				print("Unknown link type")
 			end
 		end,
-		opts = { desc = "Edit link label" },
+		opts = { desc = "Obsidian edit link label" },
 	},
 	["<leader>on"] = {
 		action = function()
@@ -70,7 +70,7 @@ local mappings = {
 				vim.cmd("ObsidianNew " .. input)
 			end)
 		end,
-		opts = { desc = "Create new obsidian note" },
+		opts = { desc = "Obsidian create new note" },
 	},
 	["<leader>or"] = {
 		action = function()
@@ -83,23 +83,25 @@ local mappings = {
 			vim.ui.input({
 				prompt = "new title: ",
 				default = note_title,
-			}, function(title)
-				if title == nil then
+			}, function(new_title)
+				if new_title == nil then
 					return
 				end
-				local id = client:new_note_id(title)
-				vim.cmd("ObsidianRename" .. id)
+				local new_id = client:new_note_id(new_title)
+				vim.cmd("ObsidianRename" .. new_id)
 				note = client:current_note()
 				if note == nil then
 					return
 				end
-				note:add_alias(title)
-				note.id = id
+				-- note:add_alias(new_title)
+                print(new_title, new_id)
+				note.id = new_id
+				note.title = new_title
 				note:save()
 				vim.cmd("edit!")
 			end)
 		end,
-		opts = { desc = "Rename obsidian note" },
+		opts = { desc = "Obsidian rename note" },
 	},
 	["<leader>oip"] = {
 		action = function()
@@ -129,6 +131,7 @@ local mappings = {
 		end,
 		opts = { buffer = true, desc = "Edit Obsidian image" },
 	},
+	-- Obsidian extend (create new) link
 	["<leader>oe"] = {
 		action = function()
 			local line = My.nvim.GetLine()
@@ -165,12 +168,13 @@ local mappings = {
 				end
 				return t
 			end
-			local new_title = title
-			new_title = sub(new_title, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
-			new_title = sub(new_title, num, num + 1)
-			local new_link_label = link_label
-			new_link_label = sub(new_link_label, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
-			new_link_label = sub(new_link_label, num, num + 1)
+			local function update(s)
+				s = sub(s, "%d%d%-%d%d%-%d%d", os.date("%d-%m-%y"))
+				s = sub(s, num, num + 1)
+				return s
+			end
+			local new_title = update(title)
+			local new_link_label = update(link_label)
 			local new_note = client:new_note(new_title)
 			local new_link = util.wiki_link_id_prefix({ id = new_note.id, label = new_link_label })
 			My.nvim.InsertLine(("%s. %s"):format(tostring(num + 1), new_link))

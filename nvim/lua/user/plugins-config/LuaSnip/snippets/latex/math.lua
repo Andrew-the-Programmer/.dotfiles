@@ -77,6 +77,7 @@ ls.add_snippets("Math", {
 	sf.lind_snip("%a", "ii", "i"),
 	sf.lind_snip("[abcdmnxyz]", "j", "j"),
 	sf.lind_snip("%a", "nn", "n"),
+	sf.lind_snip("\\%a+", "nn", "n"),
 	sf.lind_snip("%a", "mm", "m"),
 
 	-- sf.unary_operator("d", "\\d"),
@@ -134,7 +135,7 @@ ls.add_snippets("Math", {
 	sf.binary_operator("se", "\\subseteq"),
 
 	sf.binary_operator_auto("**", "\\cdot"),
-	sf.binary_operator_auto("xx", "\\times"),
+	sf.binary_operator_auto("xx/", "\\times"),
 	sf.binary_operator_auto("--", "\\dash"),
 	sf.binary_operator_auto("..", "\\dots"),
 	s({
@@ -197,7 +198,7 @@ ls.add_snippets("Math", {
 	sf.unary_func("set", "set"),
 	sf.unary_func("gr", "group"),
 	sf.unary_func("grr", "groupr"),
-	sf.unary_func("grt", "grouped"),
+	sf.unary_func("grt", "groupt"),
 	sf.unary_func("tt", "text"),
 	sf.unary_func("ti", "textit"),
 
@@ -404,39 +405,6 @@ ls.add_snippets("Math", {
 			end),
 		})
 	),
-	-- sf.pair("(", ")"),
-	-- sf.pair("[", "]"),
-	-- sf.pair("{", "}"),
-	-- sf.pair('"', '"'),
-	-- s({
-	-- 	trig = "<>",
-	-- 	wordTrig = false,
-	-- 	snippetType = "autosnippet",
-	-- }, {
-	-- 	t("\\groupt{"),
-	-- 	i(1),
-	-- 	t("}"),
-	-- }),
-	-- s({
-	-- 	trig = "((",
-	-- 	wordTrig = false,
-	-- 	snippetType = "autosnippet",
-	-- }, {
-	-- 	t("\\group{"),
-	-- 	i(1),
-	-- 	t("}"),
-	-- }),
-	-- s({
-	-- 	trig = "[[",
-	-- 	wordTrig = false,
-	-- 	snippetType = "autosnippet",
-	-- 	priority = -50,
-	-- }, {
-	-- 	t("\\groupr{"),
-	-- 	i(1),
-	-- 	t("}"),
-	-- }),
-
 	s({
 		trig = '"',
 		wordTrig = true,

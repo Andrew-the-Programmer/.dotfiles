@@ -29,6 +29,6 @@ return {
 	end,
 	condition = {
 		filetype = { "python" },
-		dir = vim.fn.getcwd(),
+		-- dir = vim.fn.getcwd(),
 	},
 }

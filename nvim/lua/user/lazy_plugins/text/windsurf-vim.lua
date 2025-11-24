@@ -12,9 +12,9 @@ return {
 			Keymap:new_nvim("i", { ";;", "жж" }, function()
 				return vim.fn["codeium#Accept"]()
 			end, { desc = "Codeium: accept", expr = true, silent = true }),
-			Keymap:new_nvim("i", { "::", "ЖЖ" }, function()
-				return vim.fn["codeium#Clear"]()
-			end, { desc = "Codeium: clear", expr = true, silent = true }),
+			-- Keymap:new_nvim("i", { "::", "ЖЖ" }, function()
+			-- 	return vim.fn["codeium#Clear"]()
+			-- end, { desc = "Codeium: clear", expr = true, silent = true }),
 			Keymap:new_nvim("i", { "<A-'>", "<A-э>" }, function()
 				return vim.fn["codeium#CycleCompletions"](1)
 			end, { desc = "Codeium: next", expr = true, silent = true }),

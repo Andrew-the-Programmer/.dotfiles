@@ -101,5 +101,6 @@ return My.FiletypeConfig:new({
 	keymaps = keymaps,
 	callback = function(ev)
 		vim.opt.wrap = true
+        -- print("markdown")
 	end,
 })

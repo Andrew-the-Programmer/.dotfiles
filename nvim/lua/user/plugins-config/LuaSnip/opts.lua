@@ -14,7 +14,7 @@ return {
 
 		if
 			My.lua.Any(ft, function(v)
-				return My.lua.ListFind({ "texMathZoneTI", "texMathZoneTD", "mkdMath" }, v)
+				return My.lua.ListFind({ "texMathZoneTI", "texMathZoneTD", "mkdMath", "texMathZoneEnv" }, v)
 			end) and not My.lua.ListFind(ft, "texMathTextConcArg")
 		then
 			table.insert(ft, "Math")

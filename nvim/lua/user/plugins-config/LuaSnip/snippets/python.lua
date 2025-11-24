@@ -20,4 +20,9 @@ ls.add_snippets("python", {
 			}
 		)
 	),
+	s("maininit", {
+		t({ "def main():", "\t" }),
+		i(0),
+		t({ "", "", "if __name__ == '__main__':", "\tmain()" }),
+	}),
 })
