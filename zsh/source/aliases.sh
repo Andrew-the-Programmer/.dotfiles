@@ -224,9 +224,49 @@ function pdf2png() {
     inkscape "$file" "--export-type=$ext"
 }
 
+alias vpn-status='echo Your IP is: $(curl https://ipinfo.io/ip)'
 alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node=$(pass show tailscale/exit-node/ip)'
 alias vpn-down='sudo tailscale set --exit-node= || sudo tailscale down'
 
 alias tailget='sudo tailscale file get .'
 
 alias nvimfzf='nvim "$(fzf)"'
+
+function gpg-export() {
+    while [[ $# -gt 0 ]]; do
+      case $1 in
+        -d|--directory)
+          dir="$2"
+          shift
+          shift
+          ;;
+        -*|--*)
+          echo "Unknown option $1"
+          exit 1
+          ;;
+        *)
+          key_id="$1"
+          shift
+          ;;
+      esac
+    done
+
+    if [ -z "$key_id" ]; then
+        echo "Please provide a key id"
+        exit 1
+    fi
+
+    if [ -z "$gpg_key_id" ]; then
+        echo "Please provide a key id"
+        exit 1
+    fi
+
+    if [ -z "$dir" ]; then
+        dir="$HOME/.gpg"
+    fi
+
+    mkdir -p "$dir"
+    gpg --export-secret-keys --armor "$key_id" > "$dir/private-key.asc"
+    gpg --export --armor $key_id > "$dir/public-key.asc"
+    #scp -r "$dir" "$target:$dir"
+}
