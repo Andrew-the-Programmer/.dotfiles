@@ -29,10 +29,7 @@ local mappings = require("user.plugins-config.obsidian.keymaps")
 
 local status, workspaces = pcall(require, "user.plugins-config.obsidian.workspaces")
 if not status then
-	workspaces = {
-		name = "In case no workspaces exists",
-		path = "/dev/null",
-	}
+    return nil
 end
 
 local opts = {
