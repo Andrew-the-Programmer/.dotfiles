@@ -224,7 +224,7 @@ function pdf2png() {
     inkscape "$file" "--export-type=$ext"
 }
 
-alias vpn-status='echo -s "Your IP is: $(curl https://ipinfo.io/ip)"'
+alias vpn-status='echo "Your IP is: $(curl -s https://ipinfo.io/ip)"'
 alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node=$(pass show tailscale/exit-node/ip) && vpn-status'
 alias vpn-down='sudo tailscale set --exit-node= || sudo tailscale down && vpn-status'
 
