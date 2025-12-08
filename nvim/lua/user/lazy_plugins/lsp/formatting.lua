@@ -40,7 +40,7 @@ return {
 				html = { "html_beautify" },
 				["*"] = {
 					-- "codespell",
-					"typos",
+					-- "typos",
 					-- "prettier",
 					-- "trim_whitespace",
 				},
