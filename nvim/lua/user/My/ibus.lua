@@ -24,13 +24,15 @@ function M.ibus_switch()
 end
 
 function M.ibus_emoji()
-	local cur_lang = My.ibus.ibus_curr()
+	local cur_lang = M.ibus_curr()
 	local lang_map = {
 		[0] = "🇺🇸",
 		[1] = "🇷🇺",
 		[2] = "🇨🇳",
 	}
-	return lang_map[cur_lang]
+    emoji = lang_map[cur_lang]
+    print(cur_lang, emoji)
+	return emoji
 end
 
 return M

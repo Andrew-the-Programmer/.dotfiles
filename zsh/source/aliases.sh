@@ -227,6 +227,7 @@ function pdf2png() {
 alias vpn-status='echo "Your IP is: $(curl -s https://ipinfo.io/ip)"'
 alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node=$(pass show tailscale/exit-node/ip) && vpn-status'
 alias vpn-down='sudo tailscale set --exit-node= && vpn-status'
+alias vpn-restart='vpn-down && vpn-up'
 
 alias tailget='sudo tailscale file get .'
 

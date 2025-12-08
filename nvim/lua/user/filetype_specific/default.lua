@@ -6,9 +6,11 @@ return My.FiletypeConfig:new({
 		vim.opt.shiftwidth = 4
 
 		My.opts.format_on_save = false
-		vim.opt.wrap = false
-		vim.opt.wrapmargin = 80
-		vim.opt.textwidth = 80
-        -- print("default")
+
+		-- vim.opt.wrap = false
+		-- vim.opt.wrapmargin = 80
+		-- vim.opt.textwidth = 80
+
+		-- print("default")
 	end,
 })
