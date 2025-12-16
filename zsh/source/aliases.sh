@@ -19,39 +19,39 @@ alias lgit="lazygit"
 alias oil="nvim +StartOil"
 
 function require_clean_work_tree() {
-    # Update the index
-    git update-index -q --ignore-submodules --refresh
-    err=0
+  # Update the index
+  git update-index -q --ignore-submodules --refresh
+  err=0
 
-    # Disallow unstaged changes in the working tree
-    if ! git diff-files --quiet --ignore-submodules --; then
-        echo >&2 "err: you have unstaged changes."
-        git diff-files --name-status -r --ignore-submodules -- >&2
-        err=1
-    fi
+  # Disallow unstaged changes in the working tree
+  if ! git diff-files --quiet --ignore-submodules --; then
+    echo >&2 "err: you have unstaged changes."
+    git diff-files --name-status -r --ignore-submodules -- >&2
+    err=1
+  fi
 
-    # Disallow uncommitted changes in the index
-    if ! git diff-index --cached --quiet HEAD --ignore-submodules --; then
-        echo >&2 "err: your index contains uncommitted changes."
-        git diff-index --cached --name-status -r --ignore-submodules HEAD -- >&2
-        err=1
-    fi
+  # Disallow uncommitted changes in the index
+  if ! git diff-index --cached --quiet HEAD --ignore-submodules --; then
+    echo >&2 "err: your index contains uncommitted changes."
+    git diff-index --cached --name-status -r --ignore-submodules HEAD -- >&2
+    err=1
+  fi
 
-    if [ "$err" = 1 ]; then
-        echo >&2 "Please commit or stash them."
-        return 1
-    fi
+  if [ "$err" = 1 ]; then
+    echo >&2 "Please commit or stash them."
+    return 1
+  fi
 }
 
 function sgit() {
-    if ! require_clean_work_tree; then
-        return 1
-    fi
-    git "$@"
+  if ! require_clean_work_tree; then
+    return 1
+  fi
+  git "$@"
 }
 
 function gsw() {
-    sgit switch "$@"
+  sgit switch "$@"
 }
 
 alias gst='git status'
@@ -66,166 +66,220 @@ alias j="jump"
 alias zz="z -"
 
 function ChdirToScriptDir() {
-    cd "$(dirname "$0")" || exit
+  cd "$(dirname "$0")" || exit
 }
 
 function ldir() {
-    find . -mindepth 1 -maxdepth 1 -type d \( ! -iname ".*" \) | sed 's|^\./||g'
+  find . -mindepth 1 -maxdepth 1 -type d \( ! -iname ".*" \) | sed 's|^\./||g'
 }
 
 alias gh='google-chrome --proxy-server="http://127.0.0.1:8080"'
 
-function touch_with_mkdir() {
-    mkdir -p "$(dirname "$1")" && touch "$1"
+function mkdir_cd() {
+  args=()
+  pos_args=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    --cd)
+      do_cd=1
+      shift
+      ;;
+    -*)
+      args+=("$1")
+      shift
+      ;;
+    *)
+      pos_args+=("$1")
+      shift
+      ;;
+    esac
+  done
+
+  /usr/bin/mkdir "${args[@]}" "${pos_args[@]}"
+
+  if [ ! -z "$do_cd" ] && [ "${#pos_args[@]}" -eq 1 ]; then
+    builtin cd "${pos_args[@]}" || exit 1
+  fi
 }
 
-alias touch="touch_with_mkdir"
+alias mkdir='mkdir_cd'
+
+function touch_mkdir() {
+  args=()
+  pos_args=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -p)
+      do_mkdir=1
+      shift
+      ;;
+    -*)
+      args+=("$1")
+      shift
+      ;;
+    *)
+      pos_args+=("$1")
+      shift
+      ;;
+    esac
+  done
+
+  if [ ! -z "$do_mkdir" ] && [ "${#pos_args[@]}" -eq 1 ]; then
+    file="${pos_args[1]}"
+    /usr/bin/mkdir -p "$(dirname "$file")"
+  fi
+
+  /usr/bin/touch "${args[@]}" "${pos_args[@]}"
+}
+
+alias touch='touch_mkdir'
 
 alias fzfd="find . -type d -print | fzf"
 alias zf="cd \$(fzfd)"
 
-if ! which bat > /dev/null; then
-    alias bat="batcat"
+if ! which bat >/dev/null; then
+  alias bat="batcat"
 fi
 
 alias fzfp="fzf --preview \"bat --color=always --style=numbers --line-range=:500 {}\""
 
 function ocrpdf() {
-    python3 -m ocrmypdf --force-ocr -l eng+rus "$1" "$1"
+  python3 -m ocrmypdf --force-ocr -l eng+rus "$1" "$1"
 }
 
 function getext() {
-    echo "${1##*.}"
+  echo "${1##*.}"
 }
 
 function getfilename() {
-    echo "${1%.*}"
+  echo "${1%.*}"
 }
 
 function webptopng() {
-    dwebp "$1" -o "$(getfilename "$1").png"
+  dwebp "$1" -o "$(getfilename "$1").png"
 }
 
 function convertext() {
-    magick "$1" "$(getfilename "$1").#2"
+  magick "$1" "$(getfilename "$1").#2"
 }
 
 function randfile() {
-    find "$1" | shuf -n 1 | tr -d "\n"
+  find "$1" | shuf -n 1 | tr -d "\n"
 }
 
 function copy_image() {
-    xclip -selection clipboard -target image/png -i < "$1"
+  xclip -selection clipboard -target image/png -i <"$1"
 }
 
 function archi() {
-    yay -Sy --noconfirm "$@"
+  yay -Sy --noconfirm "$@"
 }
 
 function debian_install() {
-    sudo apt install -y "$@"
+  sudo apt install -y "$@"
 }
 
 function sysi() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        OS=$NAME
-    fi
-    if [ "$OS" = "Arch Linux" ]; then
-        archi "$@"
-    elif [ "$OS" = "Ubuntu" ]; then
-        debian_install "$@"
-    else
-        echo "Not supported for your OS"
-    fi
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$NAME
+  fi
+  if [ "$OS" = "Arch Linux" ]; then
+    archi "$@"
+  elif [ "$OS" = "Ubuntu" ]; then
+    debian_install "$@"
+  else
+    echo "Not supported for your OS"
+  fi
 }
 
 function py_check_module() {
-    python3 -c "import $1" 2> /dev/null || return 1
-    return 0
+  python3 -c "import $1" 2>/dev/null || return 1
+  return 0
 }
 
 function pyi() {
-    module=$1
-    pymodule=$2
+  module=$1
+  pymodule=$2
 
-    if [ -z "$pymodule" ]; then
-        pymodule=$module
-    fi
+  if [ -z "$pymodule" ]; then
+    pymodule=$module
+  fi
 
-    if py_check_module "$pymodule"; then
-        echo "$module is already installed"
-        return 0
-    fi
+  if py_check_module "$pymodule"; then
+    echo "$module is already installed"
+    return 0
+  fi
 
-    sudo pacman -Sy --noconfirm "python-$module"
+  sudo pacman -Sy --noconfirm "python-$module"
 
-    if py_check_module "$pymodule"; then
-        echo "$module installed with pacman"
-        return 0
-    fi
+  if py_check_module "$pymodule"; then
+    echo "$module installed with pacman"
+    return 0
+  fi
 
-    pipx install --include-deps "$module"
+  pipx install --include-deps "$module"
 
-    if py_check_module "$pymodule"; then
-        echo "$module installed with pipx"
-        return 0
-    fi
+  if py_check_module "$pymodule"; then
+    echo "$module installed with pipx"
+    return 0
+  fi
 
-    pip install --user "$module"
+  pip install --user "$module"
 
-    if py_check_module "$pymodule"; then
-        echo "$module installed with pip"
-        return 0
-    fi
+  if py_check_module "$pymodule"; then
+    echo "$module installed with pip"
+    return 0
+  fi
 
-    # https://stackoverflow.com/questions/76499565/python-does-not-find-module-installed-with-pipx
-    pip install --user --break-system-packages "$module"
-    # "$HOME/.venvs/MyEnv/bin/python" -m pip install --user "$module"
+  # https://stackoverflow.com/questions/76499565/python-does-not-find-module-installed-with-pipx
+  pip install --user --break-system-packages "$module"
+  # "$HOME/.venvs/MyEnv/bin/python" -m pip install --user "$module"
 
-    if py_check_module "$pymodule"; then
-        echo "$module installed with pip --break-system-packages"
-        return 0
-    else
-        echo "$module not installed"
-        return 1
-    fi
+  if py_check_module "$pymodule"; then
+    echo "$module installed with pip --break-system-packages"
+    return 0
+  else
+    echo "$module not installed"
+    return 1
+  fi
 }
 
 function clip-in() {
-    xclip -selection clipboard
+  xclip -selection clipboard
 }
+
 function clip-out() {
-    xclip -selection clipboard -o
+  xclip -selection clipboard -o
 }
 
 function my-public-ip() {
-    curl ifconfig.me
+  curl -s ifconfig.me
 }
 
 function pdf2png() {
-    while [[ $# -gt 0 ]]; do
-      case $1 in
-        -e|--extension)
-          ext="$2"
-          shift
-          shift
-          ;;
-        -*|--*)
-          echo "Unknown option $1"
-          exit 1
-          ;;
-        *)
-            file="$1"
-          shift
-          ;;
-      esac
-    done
-    inkscape "$file" "--export-type=$ext"
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -e | --extension)
+      ext="$2"
+      shift
+      shift
+      ;;
+    -* | --*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      file="$1"
+      shift
+      ;;
+    esac
+  done
+  inkscape "$file" "--export-type=$ext"
 }
 
-alias vpn-status='echo "Your IP is: $(curl -s https://ipinfo.io/ip)"'
-alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node=$(pass show tailscale/exit-node/ip) && vpn-status'
+alias vpn-status='echo "Your IP is: $(my-public-ip)"'
+alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node="fi-vmpico" && vpn-status'
 alias vpn-down='sudo tailscale set --exit-node= && vpn-status'
 alias vpn-restart='vpn-down && vpn-up'
 
@@ -234,40 +288,35 @@ alias tailget='sudo tailscale file get .'
 alias nvimfzf='nvim "$(fzf)"'
 
 function gpg-export() {
-    while [[ $# -gt 0 ]]; do
-      case $1 in
-        -d|--directory)
-          dir="$2"
-          shift
-          shift
-          ;;
-        -*|--*)
-          echo "Unknown option $1"
-          exit 1
-          ;;
-        *)
-          key_id="$1"
-          shift
-          ;;
-      esac
-    done
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -d | --directory)
+      dir="$2"
+      shift
+      shift
+      ;;
+    -* | --*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      key_id="$1"
+      shift
+      ;;
+    esac
+  done
 
-    if [ -z "$key_id" ]; then
-        echo "Please provide a key id"
-        exit 1
-    fi
+  if [ -z "$key_id" ]; then
+    echo "Please provide a key id"
+    exit 1
+  fi
 
-    if [ -z "$gpg_key_id" ]; then
-        echo "Please provide a key id"
-        exit 1
-    fi
+  if [ -z "$dir" ]; then
+    dir="$HOME/.gpg"
+  fi
 
-    if [ -z "$dir" ]; then
-        dir="$HOME/.gpg"
-    fi
-
-    mkdir -p "$dir"
-    gpg --export-secret-keys --armor "$key_id" > "$dir/private-key.asc"
-    gpg --export --armor $key_id > "$dir/public-key.asc"
-    #scp -r "$dir" "$target:$dir"
+  mkdir -p "$dir"
+  gpg --export-secret-keys --armor "$key_id" >"$dir/private-key.asc"
+  gpg --export --armor $key_id >"$dir/public-key.asc"
+  #scp -r "$dir" "$target:$dir"
 }

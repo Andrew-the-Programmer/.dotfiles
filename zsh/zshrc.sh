@@ -21,8 +21,13 @@ completions=(
 
 # -----------------------------------------------------------------------------
 
-# Useful Functions
-source "$sourcedir/functions.sh"
+bashrc="$HOME/.local/share/omarchy/default/bash/zshrc"
+if [ -f "$bashrc" ]; then 
+    source "$bashrc"
+fi
+
+# Plubin Functions
+source "$ZDOTDIR/plugin-functions.sh"
 
 # Normal files to source
 for f in "$sourcedir"/*;
