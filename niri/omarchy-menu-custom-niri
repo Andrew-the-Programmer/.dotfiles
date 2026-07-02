@@ -1,0 +1,96 @@
+#!/bin/bash
+
+# omarchy:summary=Launch the Omarchy Menu or takes a parameter to jump straight to a submenu.
+
+# Set to true when going directly to a submenu, so we can exit directly
+BACK_TO_EXIT=false
+
+back_to() {
+  local parent_menu="$1"
+
+  if [[ $BACK_TO_EXIT == "true" ]]; then
+    exit 0
+  elif [[ -n $parent_menu ]]; then
+    "$parent_menu"
+  else
+    show_main_menu
+  fi
+}
+
+toggle_existing_menu() {
+  if pgrep -f "walker.*--dmenu" >/dev/null; then
+    walker --close >/dev/null 2>&1
+    exit 0
+  fi
+}
+
+menu() {
+  local prompt="$1"
+  local options="$2"
+  local extra="$3"
+  local preselect="$4"
+
+  read -r -a args <<<"$extra"
+
+  if [[ -n $preselect ]]; then
+    local index
+    index=$(echo -e "$options" | grep -nxF "$preselect" | cut -d: -f1)
+    if [[ -n $index ]]; then
+      args+=("-c" "$index")
+    fi
+  fi
+
+  echo -e "$options" | omarchy-launch-walker --dmenu --width 295 --minheight 1 --maxheight 630 -p "$prompt…" "${args[@]}" 2>/dev/null
+}
+
+terminal() {
+  xdg-terminal-exec --app-id=org.omarchy.terminal "$@"
+}
+
+present_terminal() {
+  omarchy-launch-floating-terminal-with-presentation $1
+}
+
+open_in_editor() {
+  notify-send -u low "Editing config file" "$1"
+  omarchy-launch-editor "$1"
+}
+
+show_main_menu() {
+  local options="  Update\n  Audio\n  Wifi\n󰂯  Bluetooth"
+  options="$options\n󱄄  Screensaver\n  Lock"
+  ! omarchy-toggle-enabled suspend-off && options="$options\n󰒲  Suspend"
+  omarchy-hibernation-available && options="$options\n󰤁  Hibernate"
+  options="$options\n󰍃  Logout\n󰜉  Reboot\n󰐥  Shutdown"
+  go_to_menu "$(menu "Go" "$options")"
+}
+
+go_to_menu() {
+  case "${1,,}" in
+  *update*) present_terminal omarchy-update ;;
+  *apps*) walker -p "Launch…" ;;
+  *audio*) omarchy-launch-audio ;;
+  *wifi*) omarchy-launch-wifi ;;
+  *bluetooth*) omarchy-launch-bluetooth ;;
+  *suspend*) systemctl suspend ;;
+  *hibernate*) systemctl hibernate ;;
+  *lock*) swaylock ;;
+  *logout*) niri msg action quit ;;
+  *reboot*) omarchy-system-reboot ;;
+  *shutdown*) omarchy-system-shutdown ;;
+  *screensaver*) niri msg action power-off-monitors ;;
+  esac
+}
+
+# Allow user extensions and overrides
+USER_EXTENSIONS="$HOME/.config/omarchy/extensions/menu.sh"
+[[ -f $USER_EXTENSIONS ]] && source "$USER_EXTENSIONS"
+
+toggle_existing_menu
+
+if [[ -n $1 ]]; then
+  BACK_TO_EXIT=true
+  go_to_menu "$1"
+else
+  show_main_menu
+fi
