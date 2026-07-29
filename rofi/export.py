@@ -1,16 +1,18 @@
-from utils import get_system_config_path, get_cwd_path
+from utils2 import config, get_system_config_path
+
+register = config.register("rofi")
 
 
-def getRefs():
-    cwd = get_cwd_path(__file__)
+@register.links()
+def rofi_links():
     config = get_system_config_path() / "rofi"
     return [
         (
+            "config.rasi",
             config / "config.rasi",
-            cwd / "config.rasi",
         ),
         (
+            "themes",
             config / "themes",
-            cwd / "themes",
         ),
     ]

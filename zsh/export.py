@@ -1,15 +1,18 @@
-from utils import get_cwd_path, get_system_config_path, get_home_path
+from utils2 import config, get_cwd_path, get_home_path, get_system_config_path
+
+register = config.register("zsh")
 
 
-def getRefs():
+@register.links()
+def zsh_links():
     cwd = get_cwd_path(__file__)
     config = get_system_config_path() / "zsh"
 
     return [
-        (get_home_path() / ".zshenv", cwd / "zshenv"),
-        (config / ".zshrc", cwd / "zshrc"),
+        (cwd / "zshenv", get_home_path() / ".zshenv"),
+        (cwd / "zshrc", config / ".zshrc"),
         *[
-            (config / s, cwd / s)
+            (cwd / s, config / s)
             for s in [
                 "source",
                 "plugins-config",

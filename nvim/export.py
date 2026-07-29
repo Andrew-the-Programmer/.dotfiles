@@ -1,24 +1,23 @@
-from utils import get_cwd_path, get_system_config_path
+from utils2 import config, get_cwd_path, get_system_config_path
+
+register = config.register("nvim")
 
 
-def getRefs():
+@register.links()
+def nvim_links():
     cwd = get_cwd_path(__file__)
     config = get_system_config_path() / "nvim"
 
     return [
-        *[
-            (config / s, cwd / s)
-            for s in [
-                "lua",
-                "init.lua",
-            ]
-            + [
-                "plugin",
-                "spell",
-                ".neoconf.json",
-                "lazy-lock.json",
-                "lazyvim.json",
-                "stylua.toml",
-            ]
-        ],
+        (cwd / s, config)
+        for s in [
+            "lua",
+            "init.lua",
+            "plugin",
+            "spell",
+            ".neoconf.json",
+            "lazy-lock.json",
+            "lazyvim.json",
+            "stylua.toml",
+        ]
     ]

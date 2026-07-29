@@ -1,10 +1,13 @@
-from utils import get_cwd_path, get_system_config_path
+from utils2 import config, get_cwd_path, get_system_config_path
+
+register = config.register("noctalia")
 
 
-def getRefs():
+@register.links()
+def links():
     cwd = get_cwd_path(__file__)
     config = get_system_config_path() / "noctalia"
     return [
-        (config / filename, cwd / filename)
+        (cwd / filename, config / filename)
         for filename in ["colors.json", "settings.json", "plugins.json"]
     ]
