@@ -80,15 +80,6 @@
             "center": [
                 {
                     "defaultSettings": {
-                        "connectedColor": "primary",
-                        "disableToastNotifications": false,
-                        "disconnectedColor": "none",
-                        "displayMode": "onhover"
-                    },
-                    "id": "plugin:network-manager-vpn"
-                },
-                {
-                    "defaultSettings": {
                         "compactMode": false,
                         "defaultPeerAction": "copy-ip",
                         "hideDisconnected": false,
@@ -570,7 +561,7 @@
         "bluetoothRssiPollingEnabled": false,
         "disableDiscoverability": false,
         "networkPanelView": "wifi",
-        "wifiDetailsViewMode": "grid"
+        "wifiDetailsViewMode": "list"
     },
     "nightLight": {
         "autoSchedule": true,

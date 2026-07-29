@@ -328,12 +328,14 @@ function pdf2png() {
   inkscape "$file" "--export-type=$ext"
 }
 
-alias vpn-status='echo "Your IP is: $(my-public-ip)"'
-alias vpn-up='sudo tailscale up && sudo tailscale set --exit-node="fi-vmpico" && vpn-status'
-alias vpn-down='sudo tailscale set --exit-node= && vpn-status'
-alias vpn-restart='vpn-down && vpn-up'
-alias vu='vpn-up'
-alias vd='vpn-down'
+alias vs='echo "Your IP is: $(my-public-ip)"'
+function vu {
+  sudo tailscale set --exit-node="$(
+    tailscale exit-node list | awk '{print $2}' | grep taila | fzf
+  )"
+}
+alias vd='sudo tailscale set --exit-node='
+alias vr='vd && vu'
 
 alias tailget='sudo tailscale file get .'
 

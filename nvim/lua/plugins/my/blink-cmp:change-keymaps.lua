@@ -1,6 +1,7 @@
 -- LazyVim completions engine
 return {
   "saghen/blink.cmp",
+  enabled=true,
 
   opts = function(_, opts)
     opts.keymap = {

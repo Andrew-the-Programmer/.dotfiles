@@ -3,8 +3,11 @@
 -- Add any additional options here
 
 vim.opt.relativenumber = true
-vim.opt.scrolloff = 999
+vim.opt.scrolloff = 999 -- see scrollEOF.nvim
 
 vim.opt.clipboard = ""
 
 vim.g.root_spec = { "cwd" } -- because telescope gets confused
+
+vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_ruff = "ruff"

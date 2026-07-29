@@ -1,0 +1,4 @@
+Dependencies:
+
+- fzf
+- zoxide

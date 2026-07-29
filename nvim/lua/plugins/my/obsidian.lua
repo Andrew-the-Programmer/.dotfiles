@@ -16,5 +16,12 @@ return {
     { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Paste imate from clipboard under cursor", mode = "n" },
   },
 
-  opts = {},
+  opts = {
+    note_id_func = function(title)
+      if title == nil then
+        return require("obsidian.builtin").zettel_id()
+      end
+      return require("obsidian.builtin").zettel_id() + "-" + title
+    end,
+  },
 }
