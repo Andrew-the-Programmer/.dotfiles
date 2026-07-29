@@ -1,7 +1,7 @@
 import importlib
 import subprocess
 from pathlib import Path
-from typing import Callable, List, Tuple, Union
+from typing import Callable, Iterable, Tuple, Union
 
 Pathlike = Union[str, Path]
 
@@ -23,18 +23,18 @@ def Link(target: Pathlike, link: Pathlike) -> None:
     ln -sdfn { target } { link }"""
 
     Path(link).parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["ln", "-sin", target, link])
+    subprocess.run(["ln", "-sinT", target, link])
 
 
 class ConfigRegister:
     name: str
-    links_fn: Callable[[], List[Tuple[Pathlike, Pathlike]]] | None = None
+    links_fn: Callable[[], Iterable[Tuple[Pathlike, Pathlike]]] | None = None
 
     def __init__(self, name: str) -> None:
         self.name = name
 
     def links(self):
-        def decorator(func: Callable[[], List[Tuple[Pathlike, Pathlike]]]):
+        def decorator(func: Callable[[], Iterable[Tuple[Pathlike, Pathlike]]]):
             self.links_fn = func
             return func
 
@@ -43,6 +43,7 @@ class ConfigRegister:
     def export(self):
         if self.links_fn is not None:
             for target, link in self.links_fn():
+                # print(f"{target} -> {link}")
                 Link(target, link)
 
 

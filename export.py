@@ -12,4 +12,5 @@ if __name__ == "__main__":
     config.load_all()
 
     for pkg in args.packages:
+        print(f"Exporting: '{pkg}'")
         config.export(pkg)
