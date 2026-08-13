@@ -1,9 +1,10 @@
 import importlib
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Callable, Iterable, Tuple, Union
+from typing import Callable
 
-Pathlike = Union[str, Path]
+Pathlike = str | Path
 
 
 def get_cwd_path(file: str):
@@ -23,18 +24,18 @@ def Link(target: Pathlike, link: Pathlike) -> None:
     ln -sdfn { target } { link }"""
 
     Path(link).parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["ln", "-sinT", target, link])
+    _ = subprocess.run(["ln", "-sinT", target, link])
 
 
 class ConfigRegister:
     name: str
-    links_fn: Callable[[], Iterable[Tuple[Pathlike, Pathlike]]] | None = None
+    links_fn: Callable[[], Iterable[tuple[Pathlike, Pathlike]]] | None = None
 
     def __init__(self, name: str) -> None:
         self.name = name
 
     def links(self):
-        def decorator(func: Callable[[], Iterable[Tuple[Pathlike, Pathlike]]]):
+        def decorator(func: Callable[[], Iterable[tuple[Pathlike, Pathlike]]]):
             self.links_fn = func
             return func
 
@@ -65,7 +66,7 @@ class ConfigRegistry:
             if item.is_dir() and (item / "export.py").exists()
         ]:
             try:
-                importlib.import_module(f"{pkg}.export")
+                _ = importlib.import_module(f"{pkg}.export")
             except ModuleNotFoundError:
                 print(f"No export module found for '{pkg}'")
 

@@ -9,7 +9,7 @@ def nvim_links():
     config = get_system_config_path() / "nvim"
 
     return [
-        (cwd / s, config)
+        (cwd / s, config / s)
         for s in [
             "lua",
             "init.lua",
