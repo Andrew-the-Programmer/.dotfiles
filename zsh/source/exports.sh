@@ -18,6 +18,7 @@ export CONDA_BIN=/opt/miniconda3/bin
 export PATH=$HOME/.local/include:$PATH
 export TEXMFHOME=~/texmf
 export SUDO_ASKPASS=/usr/local/bin/sudo-askpass
+export SHELL=zsh
 
 #alias sudo='sudo -A'
 

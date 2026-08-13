@@ -1,0 +1,12 @@
+name = 'shiro'
+version = 1
+
+[[surface]]
+name = 'main'
+session = 'shiro-main'
+cwd = '/home/andrew/projects/shirovpn_new/main_api_amqp'
+
+[[surface]]
+name = 'shell'
+session = 'shiro-shell'
+cwd = '/home/andrew/projects/shirovpn_new/main_api_amqp'

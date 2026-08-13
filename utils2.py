@@ -6,7 +6,7 @@ from typing import Callable, Iterable, Tuple, Union
 Pathlike = Union[str, Path]
 
 
-def get_cwd_path(file):
+def get_cwd_path(file: str):
     return Path(file).parent.resolve()
 
 

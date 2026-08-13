@@ -9,5 +9,5 @@ vim.opt.clipboard = ""
 
 vim.g.root_spec = { "cwd" } -- because telescope gets confused
 
-vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_lsp = "basedpyright"
 vim.g.lazyvim_python_ruff = "ruff"

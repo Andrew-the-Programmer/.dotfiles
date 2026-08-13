@@ -1,0 +1,13 @@
+name = 'shiro'
+version = 1
+
+[[surface]]
+name = 'main'
+session = 'shiro-main'
+cwd = '/home/andrew/apps/tsm'
+
+[[surface.split]]
+name = 'shell'
+session = 'shiro-shell'
+direction = 'right'
+cwd = '/home/andrew/apps/tsm'

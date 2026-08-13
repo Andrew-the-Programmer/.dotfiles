@@ -20,6 +20,20 @@ alias oil="nvim +StartOil"
 
 alias dc="docker-compose"
 
+function dcr {
+  local services="${*}"
+
+  if [ ${#services[@]} -eq 0 ]; then
+    dc down &&
+      dc up -d --build &&
+      dc logs -f
+  else
+    dc down "${services[@]}" &&
+      dc up -d --build "${services[@]}" &&
+      dc logs -f "${services[@]}"
+  fi
+}
+
 function conda {
   source "$CONDA_BIN/conda" "$@"
 }
@@ -315,7 +329,7 @@ function pdf2png() {
       shift
       shift
       ;;
-    -* | --*)
+    -*)
       echo "Unknown option $1"
       return 1
       ;;
@@ -329,17 +343,18 @@ function pdf2png() {
 }
 
 alias vs='echo "Your IP is: $(my-public-ip)"'
-function vu {
-  sudo tailscale set --exit-node="$(
-    tailscale exit-node list | awk '{print $2}' | grep taila | fzf
-  )"
+
+function tsen {
+  exit_node=$(tailscale exit-node list | awk '{print $2}' | grep tail | cat - <(echo "None") | fzf)
+  if [ "$exit_node" = "None" ]; then
+    exit_node=""
+  fi
+  sudo tailscale set --exit-node="$exit_node"
 }
-alias vd='sudo tailscale set --exit-node='
-alias vr='vd && vu'
 
-alias tailget='sudo tailscale file get .'
+alias tget='sudo tailscale file get .'
 
-alias nvimfzf='nvim "$(fzf)"'
+alias nfzf='nvim "$(fzf)"'
 
 function gpg-export() {
   while [[ $# -gt 0 ]]; do

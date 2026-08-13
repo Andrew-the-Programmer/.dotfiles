@@ -1,3 +1,7 @@
+local function id()
+  return tostring(math.random(100, 999))
+end
+
 return {
   "epwalsh/obsidian.nvim",
   version = "*", -- recommended, use latest release instead of latest commit
@@ -18,10 +22,11 @@ return {
 
   opts = {
     note_id_func = function(title)
+      print(title)
       if title == nil then
-        return require("obsidian.builtin").zettel_id()
+        return id()
       end
-      return require("obsidian.builtin").zettel_id() + "-" + title
+      return id() .. "-" .. title
     end,
   },
 }

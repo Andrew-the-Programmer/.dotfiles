@@ -1,6 +1,8 @@
 return {
   "snacks.nvim",
-  dependencies = { "obsidian.nvim" },
+  dependencies = {
+    "epwalsh/obsidian.nvim",
+  },
   opts = function(_, opts)
     table.insert(opts.dashboard.preset.keys, 1, {
       icon = "💡",

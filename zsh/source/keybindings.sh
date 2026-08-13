@@ -6,5 +6,16 @@
 # bindkey "\C-k" previous-history
 # bindkey "\C-j" next-history
 
+bindkey '^L' forward-char # Finish completion: echo hi <CR> ech<^L> -> echo hi
+
 bindkey -v
 bindkey "^R" history-incremental-pattern-search-backward
+
+tsm_palette() {
+  zle -I
+  tsm p
+  zle reset-prompt
+}
+
+zle -N tsm_palette
+bindkey '^o' tsm_palette
