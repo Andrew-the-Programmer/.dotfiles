@@ -1,6 +1,6 @@
 from utils2 import config, get_cwd_path, get_system_config_path
 
-register = config.register("nvim-min")
+register = config.register("nvim-mini")
 
 
 @register.links()
