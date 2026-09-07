@@ -41,4 +41,6 @@ vim.keymap.set({ "n", "x", "o" }, "F", function()
   require("flash").treesitter()
 end, { desc = "Flash Treesitter" })
 
--- vim.opt.langmap = "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
+vim.keymap.set({ "n", "t" }, "<C-]>", function()
+  Snacks.terminal.toggle()
+end, { desc = "Close terminal" })
