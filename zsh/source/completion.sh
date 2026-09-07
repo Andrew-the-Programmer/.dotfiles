@@ -2,7 +2,8 @@
 
 autoload -Uz compinit && compinit
 
-autoload -U compinit; compinit
+autoload -U compinit
+compinit
 
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on

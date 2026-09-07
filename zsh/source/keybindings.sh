@@ -11,11 +11,6 @@ bindkey '^L' forward-char # Finish completion: echo hi <CR> ech<^L> -> echo hi
 bindkey -v
 bindkey "^R" history-incremental-pattern-search-backward
 
-tsm_palette() {
-  zle -I
-  tsm p
-  zle reset-prompt
-}
+bindkey -s '^o' 'zsm\r'
 
-zle -N tsm_palette
-bindkey '^o' tsm_palette
+bindkey -s '^p' 'zp\r'

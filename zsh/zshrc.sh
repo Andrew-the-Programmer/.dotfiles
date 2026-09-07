@@ -4,9 +4,6 @@ if [ -f "$HOME/.zshrc" ]; then
   source "$HOME/.zshrc"
 fi
 
-sourcedir="$ZDOTDIR/source"
-pluginsconfigdir="$ZDOTDIR/plugins-config"
-
 plugins=(
   "zsh-users/zsh-autosuggestions"
   "zsh-users/zsh-syntax-highlighting"
@@ -20,7 +17,7 @@ plugins=(
 # More completions https://github.com/zsh-users/zsh-completions
 
 completions=(
-  # "esc/conda-zsh-completion"
+  "esc/conda-zsh-completion"
 )
 
 # -----------------------------------------------------------------------------
@@ -34,7 +31,11 @@ completions=(
 source "$ZDOTDIR/plugin-functions.sh"
 
 # Normal files to source
-for f in "$sourcedir"/*; do
+for f in "$ZDOTDIR/source"/*; do
+  zsh_add_file "$f"
+done
+
+for f in "$ZDOTDIR/file-plugins"/*; do
   zsh_add_file "$f"
 done
 
@@ -45,11 +46,11 @@ done
 
 # Completions
 for completion in "${completions[@]}"; do
-  zsh_add_completion "$completion" false
+  zsh_add_completion "$completion" true
 done
 
 # Source plugins config files
-for f in "$pluginsconfigdir"/*; do
+for f in "$ZDOTDIR/plugins-config"/*; do
   zsh_add_file "$f"
 done
 

@@ -18,7 +18,16 @@ alias lgit="lazygit"
 
 alias oil="nvim +StartOil"
 
-alias dc="docker-compose"
+function dc {
+  (
+    if [ -n "$DC_DIR" ]; then
+      cd "$DC_DIR" || exit 1
+    fi
+    docker-compose "$@"
+  )
+}
+
+alias zsm="zmx-session-manager"
 
 function dcr {
   local services="${*}"
@@ -35,11 +44,20 @@ function dcr {
 }
 
 function conda {
-  source "$CONDA_BIN/conda" "$@"
+  "$CONDA_BIN/conda" "$@"
 }
 
 function ca {
-  source "$CONDA_BIN/activate" "$@"
+  local env=$1
+  if [ -z "$env" ]; then
+    env=$(conda info --envs | grep -v '^#' | grep -v '^$' | fzf | awk '{print $NF}')
+  fi
+  if [ -z "$env" ]; then
+    echo "Failed to get env"
+    return 1
+  fi
+  echo "$env"
+  source "$CONDA_BIN/activate" "$env"
 }
 
 alias cl="conda env list"
@@ -89,7 +107,7 @@ alias gpr='git pull --rebase'
 zsh_config_file="$ZDOTDIR/.zshrc"
 
 alias zsh-config='nvim $zsh_config_file'
-alias zsh-reload='source $zsh_config_file'
+alias zsh-reload='exec zsh'
 
 alias j="jump"
 
@@ -124,6 +142,7 @@ alias d='docker'
 alias r='rails'
 # nvim
 alias n='nvim'
+alias nv='nvim -c "nnoremap q :q!<CR>" -'
 alias g='git'
 alias t='tailscale'
 alias tsa='tailscale status --active'
@@ -601,4 +620,95 @@ EOF
     esac
     ffmpeg -loglevel "$loglevel" -i "$file" "${ffmpeg_args[@]}" "$output"
   done
+}
+
+pop_last() {
+  last="${@: -1}"
+  set -- "${@:1:$#-1}"
+}
+
+tmux-glob() {
+  local pattern="${*: -1}"
+  local tmux_args=("${@:1:${#@}-1}")
+  local sessions=($(tmux ls -F "#{session_name}" | grep "$pattern"))
+  for session in "${sessions[@]}"; do
+    echo Session: $session
+    eval "tmux ${tmux_args[*]} $session"
+  done
+}
+
+tmux-init-dir() {
+  local help=""
+  local socket_name
+
+  socket_name=$(basename "$(pwd)")
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    --help)
+      help="yes"
+      shift 1
+      ;;
+    -L)
+      socket_name="$2"
+      shift 2
+      ;;
+    esac
+  done
+
+  if [ -n "$help" ]; then
+    cat <<EOF
+Usage:
+    tmux-init-dir [-L socket_name] TARGETS...
+    tmux-init-dir --help
+EOF
+    return 0
+  fi
+
+  for folder in ./*/; do
+    local name="$(basename "$folder")"
+    (
+      cd "$folder" || return 1
+      tmux -L "$socket_name" new -s "$name" -d
+    )
+  done
+}
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+function p10k-configure() {
+  source_file="$HOME/.config/zsh/.p10k.zsh"
+  configs_folder="$ZDOTDIR/p10k-configs"
+  exit_option="exit"
+  create_option="create new config"
+
+  selected_config=$(
+    {
+      ls "$configs_folder" &
+      echo "$create_option" &
+      echo "$exit_option"
+    } |
+      fzf --prompt="Select p10k config: "
+  )
+  if [ "$selected_config" = "$exit_option" ]; then
+    if [ ! -f "$source_file" ]; then
+      default_config="$configs_folder/personal.zsh"
+      cp "$default_config" "$source_file"
+    fi
+    source "$source_file"
+    return 0
+  fi
+  if [ "$selected_config" = "$create_option" ]; then
+    p10k configure || return 1
+    read -p "Continue (y/N)?" choice
+    case "$choice" in
+    y | Y)
+      read -p "Name {}.zsh: " name
+      cp "$source_file" "$configs_folder/$name.zsh"
+      ;;
+    esac
+    return 0
+  fi
+  selected_config_file="$configs_folder/$selected_config"
+  cp "$selected_config_file" "$source_file"
+  source "$source_file"
 }

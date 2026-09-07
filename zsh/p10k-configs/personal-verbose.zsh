@@ -28,6 +28,10 @@
 [[ ! -o 'no_brace_expand' ]] || p10k_config_opts+=('no_brace_expand')
 'builtin' 'setopt' 'no_aliases' 'no_sh_glob' 'brace_expand'
 
+function prompt_zmx_session() {
+  [[ -n $ZMX_SESSION ]] && echo "[$ZMX_SESSION]"
+}
+
 () {
   emulate -L zsh -o extended_glob
 
@@ -46,10 +50,15 @@
   local cyan='6'
   local white='7'
 
+  typeset -g POWERLEVEL9K_CUSTOM_ZMX_SESSION="prompt_zmx_session"
+  typeset -g POWERLEVEL9K_CUSTOM_ZMX_SESSION_FOREGROUND=242
+  typeset -g POWERLEVEL9K_CUSTOM_ZMX_SESSION_BACKGROUND=none
+
   # Left prompt segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     # context                 # user@host
+    custom_zmx_session
     dir                       # current directory
     vcs                       # git status
     # command_execution_time  # previous command duration

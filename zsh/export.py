@@ -10,12 +10,14 @@ def zsh_links():
 
     return [
         (cwd / "zshenv", get_home_path() / ".zshenv"),
+        (cwd / "zshrc", get_home_path() / ".zshrc"),
         (cwd / "zshrc", config / ".zshrc"),
         *[
             (cwd / s, config / s)
             for s in [
                 "source",
                 "plugins-config",
+                "file-plugins",
                 "p10k-configs",
                 "plugin-functions.sh",
                 "zshrc.sh",
