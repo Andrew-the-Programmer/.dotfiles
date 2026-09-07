@@ -7,4 +7,10 @@ register = config.register("kitty")
 def links():
     cwd = get_cwd_path(__file__)
     config = get_system_config_path() / "kitty"
-    return [(cwd / f, config / f) for f in ["kitty.conf"]]
+    return [
+        (cwd / f, config / f)
+        for f in [
+            "kitty.conf",
+            "scripts",
+        ]
+    ]
